@@ -1,0 +1,532 @@
+/* Base reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+/* Design tokens */
+:root {
+  --color-bg: #fafafa;
+  --color-text: #1a1a1a;
+  --color-muted: #666;
+  --color-border: #e0e0e0;
+  --color-surface: #fff;
+  --color-media-bg: #e8e8e8;
+
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
+
+  --panel-width: 80vw;
+  --header-height: 120px;
+
+  --scroll-sync-media-bg: var(--color-media-bg);
+  --scroll-sync-caption-color: var(--color-muted);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --color-bg: #1a1a1a;
+  --color-text: #e8e8e8;
+  --color-muted: #999;
+  --color-border: #333;
+  --color-surface: #242424;
+  --color-media-bg: #2a2a2a;
+}
+
+/* Dark mode image treatment - reduce eye strain */
+[data-theme="dark"] img {
+  filter: brightness(0.8) grayscale(1);
+  transition: filter 0.3s ease;
+}
+
+[data-theme="dark"] img:hover,
+[data-theme="dark"] img:active {
+  filter: brightness(1) grayscale(0);
+}
+
+/* Base */
+html {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  line-height: 1.6;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Shared header styles */
+.site-header,
+.panel-header {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+/* Site header - default right-handed: controls on right */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Left-handed: controls on left */
+[data-handed="left"] .site-header {
+  flex-direction: row-reverse;
+}
+
+.site-branding {
+  min-width: 0;
+}
+
+.site-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.125rem;
+}
+
+.site-tagline {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+/* Controls */
+.site-controls {
+  display: flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.control-btn {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-muted);
+  padding: 0.375rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.control-btn:hover {
+  color: var(--color-text);
+  border-color: var(--color-text);
+}
+
+/* Theme toggle icons */
+.icon-moon { display: none; }
+[data-theme="dark"] .icon-sun { display: none; }
+[data-theme="dark"] .icon-moon { display: block; }
+
+/* Hand toggle icons - default shows right hand (right-handed mode) */
+.icon-hand-left { display: none; }
+[data-handed="left"] .icon-hand-right { display: none; }
+[data-handed="left"] .icon-hand-left { display: block; }
+
+/* Main container */
+.main-container {
+  display: flex;
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* Cards grid */
+.cards-grid {
+  flex: 1;
+  padding: 1rem 2rem 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  align-content: start;
+  transition: padding-right 0.3s ease;
+}
+
+/* When panel is open, add padding to prevent overlap */
+/* Default (right-handed): panel on left, cards push right */
+body.panel-open .cards-grid {
+  padding-left: calc(var(--panel-width) + 2rem);
+}
+
+/* Left-handed: panel on right, cards push left */
+[data-handed="left"] body.panel-open .cards-grid {
+  padding-left: 2rem;
+  padding-right: calc(var(--panel-width) + 2rem);
+}
+
+/* Card */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+  border-color: var(--color-text);
+}
+
+.card.active {
+  border-color: var(--color-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card-category {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+
+.card-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Panel - default is right-handed (panel on left) */
+.panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--panel-width);
+  height: 100vh;
+  background: var(--color-bg);
+  border-right: 1px solid var(--color-border);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+body.panel-open .panel {
+  transform: translateX(0);
+}
+
+/* Left-handed mode: panel on right */
+[data-handed="left"] .panel {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid var(--color-border);
+  transform: translateX(100%);
+}
+
+[data-handed="left"] body.panel-open .panel {
+  transform: translateX(0);
+}
+
+.panel-header {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Left-handed: restore normal order */
+[data-handed="left"] .panel-header {
+  flex-direction: row;
+}
+
+.panel-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.panel-category {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  display: block;
+  margin-bottom: 0.125rem;
+}
+
+.panel-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-close {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  color: var(--color-muted);
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+[data-handed="left"] .panel-close {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+
+.panel-close:hover {
+  color: var(--color-text);
+  background: var(--color-border);
+}
+
+/* Scroll-sync inside panel */
+.panel scroll-sync {
+  flex: 1;
+  overflow-y: auto;
+  --scroll-sync-padding: 0 2rem 2rem;
+  --scroll-sync-gap: 24px;
+}
+
+/* Article typography */
+article {
+  min-width: 0;
+}
+
+article h1 {
+  font-size: 1.75rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+article h2 {
+  font-size: 1.25rem;
+  margin: 2rem 0 1rem;
+  line-height: 1.3;
+  position: sticky;
+  top: 0;
+  background: var(--color-bg);
+  padding: 0.5rem 0;
+  z-index: 9;
+}
+
+article h3 {
+  font-size: 1.25rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+article p {
+  margin-bottom: 1rem;
+}
+
+article a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+article a:hover {
+  text-decoration-thickness: 2px;
+}
+
+article strong {
+  font-weight: 600;
+}
+
+article em {
+  font-style: italic;
+}
+
+article mark {
+  background: rgba(255, 200, 0, 0.3);
+  padding: 0 0.2rem;
+}
+
+article code {
+  background: var(--color-media-bg);
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+article ul, article ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+article li {
+  margin-bottom: 0.5rem;
+}
+
+/* Media figures in article - hidden on desktop, visible on mobile */
+article figure[data-media] {
+  display: block;
+  height: 1px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+
+article figure[data-media] img,
+article figure[data-media] figcaption,
+article figure[data-media] blockquote,
+article figure[data-media] pre {
+  visibility: hidden;
+}
+
+/* Loading state */
+.loading {
+  color: var(--color-muted);
+  font-style: italic;
+  padding: 2rem;
+}
+
+.error {
+  color: #c00;
+}
+
+/* Mobile: full-screen panel */
+@media (max-width: 900px) {
+  :root {
+    --panel-width: 100vw;
+    --header-height: 100px;
+  }
+
+  .site-header,
+  .panel-header {
+    padding: 1rem;
+  }
+
+  .site-title,
+  .panel-heading {
+    font-size: 1.125rem;
+  }
+
+  .site-tagline {
+    display: none;
+  }
+
+  .site-controls {
+    gap: 0.125rem;
+  }
+
+  .control-btn {
+    padding: 0.25rem 0.375rem;
+  }
+
+  .cards-grid {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  body.panel-open .cards-grid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .panel {
+    border-left: none;
+  }
+
+  .panel scroll-sync {
+    --scroll-sync-padding: 0 1rem 1rem;
+  }
+
+  /* Show inline media on mobile */
+  article figure[data-media] {
+    height: auto;
+    overflow: visible;
+    background: var(--color-media-bg);
+    padding: 1rem;
+    border-radius: 4px;
+  }
+
+  article figure[data-media] img,
+  article figure[data-media] figcaption,
+  article figure[data-media] blockquote,
+  article figure[data-media] pre {
+    visibility: visible;
+  }
+
+  article figure[data-media] img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  article figure[data-media] figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+  }
+
+  article figure[data-media] blockquote {
+    font-size: 1.125rem;
+    font-style: italic;
+    border-left: 3px solid var(--color-text);
+    padding-left: 1rem;
+    margin: 0;
+  }
+
+  article figure[data-media] pre {
+    background: var(--color-text);
+    color: var(--color-bg);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+  }
+
+  article figure[data-media] code {
+    font-family: var(--font-mono);
+    background: none;
+    padding: 0;
+  }
+
+  /* Prevent body scroll when panel is open on mobile */
+  body.panel-open {
+    overflow: hidden;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .card {
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1rem;
+  }
+
+  article h1 {
+    font-size: 1.5rem;
+  }
+
+  article h2 {
+    font-size: 1.25rem;
+  }
+}
