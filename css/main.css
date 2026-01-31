@@ -16,7 +16,7 @@
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
 
-  --panel-width: 80vw;
+  --panel-width: min(80vw, calc(100vw - 320px));
   --header-height: 120px;
 
   --scroll-sync-media-bg: var(--color-media-bg);
