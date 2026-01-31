@@ -443,7 +443,8 @@ article figure[data-media] pre {
     gap: 1rem;
   }
 
-  body.panel-open .cards-grid {
+  body.panel-open .cards-grid,
+  [data-handed="left"] body.panel-open .cards-grid {
     padding-left: 1rem;
     padding-right: 1rem;
   }
