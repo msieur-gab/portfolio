@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Ink Watch — Rotating Gradient v2</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #e8e8e8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      gap: 3rem;
+    }
+    
+    .watch-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .watch-section h2 {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    
+    .watch-container {
+      background: #f5f5f5;
+      border-radius: 50%;
+      padding: 12px;
+      box-shadow: 
+        0 2px 8px rgba(0,0,0,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+    
+    canvas {
+      display: block;
+      border-radius: 50%;
+    }
+    
+    .time-display {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+      font-size: 1.25rem;
+      color: #333;
+      font-weight: 300;
+    }
+    
+    .watches-row {
+      display: flex;
+      gap: 4rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .controls {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #555;
+      cursor: pointer;
+    }
+    
+    .toggle input {
+      width: 1rem;
+      height: 1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="watches-row">
+    <!-- Hours + Minutes only -->
+    <div class="watch-section">
+      <h2>Hours + Minutes</h2>
+      <div class="watch-container">
+        <canvas id="watch-hm" width="240" height="240"></canvas>
+      </div>
+      <div class="time-display" id="time-hm">00:00</div>
+    </div>
+    
+    <!-- Hours + Minutes + Seconds -->
+    <div class="watch-section">
+      <h2>Hours + Minutes + Seconds</h2>
+      <div class="watch-container">
+        <canvas id="watch-hms" width="240" height="240"></canvas>
+      </div>
+      <div class="time-display" id="time-hms">00:00:00</div>
+    </div>
+  </div>
+  
+  <div class="controls">
+    <label class="toggle">
+      <input type="checkbox" id="invert-hours">
+      <span>Invert hours: dark = remaining time</span>
+    </label>
+    <label class="toggle">
+      <input type="checkbox" id="invert-colors">
+      <span>Invert colors: black background, white gradients</span>
+    </label>
+  </div>
+
+  <script>
+    // Convert time units to rotation angles
+    function hoursToRotation(hours, minutes) {
+      const totalHours = (hours % 12) + (minutes / 60);
+      return (totalHours / 12) * Math.PI * 2;
+    }
+    
+    function minutesToRotation(minutes, seconds) {
+      const totalMinutes = minutes + (seconds / 60);
+      return (totalMinutes / 60) * Math.PI * 2;
+    }
+    
+    function secondsToRotation(seconds, milliseconds) {
+      const totalSeconds = seconds + (milliseconds / 1000);
+      return (totalSeconds / 60) * Math.PI * 2;
+    }
+    
+    // Draw a rotating gradient arc
+    // rotation: how much the arc has rotated from 12 o'clock
+    // arcLength: the angular length of the gradient tail (in radians)
+    // innerR, outerR: radius bounds
+    // maxOpacity: darkness at the leading edge
+    // invertColors: if true, draw white on black instead of black on white
+    function drawRotatingGradientArc(ctx, cx, cy, rotation, arcLength, innerR, outerR, maxOpacity, invertColors = false) {
+      const w = ctx.canvas.width;
+      const h = ctx.canvas.height;
+      
+      const color = invertColors ? '255,255,255' : '0,0,0';
+      
+      // Leading edge angle (where the darkest part is)
+      const leadingAngle = -Math.PI / 2 + rotation;
+      // Trailing edge (where it fades to nothing)
+      const trailingAngle = leadingAngle - arcLength;
+      
+      ctx.save();
+      
+      // Clip to the arc sector
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, outerR, trailingAngle, leadingAngle);
+      ctx.closePath();
+      ctx.clip();
+      
+      // Cut out inner circle if needed
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+      ctx.arc(cx, cy, innerR, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.clip();
+      
+      // Create conic gradient that rotates with the arc
+      // The gradient goes from transparent (at trailing) to opaque (at leading)
+      const grad = ctx.createConicGradient(trailingAngle, cx, cy);
+      
+      // Calculate what fraction of the full circle our arc covers
+      const arcFraction = arcLength / (Math.PI * 2);
+      
+      // Gradient stops: from trailing (0) to leading (arcFraction)
+      grad.addColorStop(0, `rgba(${color},0)`);
+      grad.addColorStop(arcFraction * 0.5, `rgba(${color},${maxOpacity * 0.3})`);
+      grad.addColorStop(arcFraction * 0.8, `rgba(${color},${maxOpacity * 0.6})`);
+      grad.addColorStop(arcFraction, `rgba(${color},${maxOpacity})`);
+      // Rest is transparent (won't show due to clip, but needed for gradient)
+      grad.addColorStop(arcFraction + 0.001, `rgba(${color},0)`);
+      grad.addColorStop(1, `rgba(${color},0)`);
+      
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+      
+      ctx.restore();
+    }
+    
+    // Draw inverted gradient arc - remaining time is dark, elapsed is clear
+    // rotation: current position (where elapsed meets remaining)
+    // innerR, outerR: radius bounds
+    // maxOpacity: darkness of the remaining time
+    // invertColors: if true, draw white on black instead of black on white
+    function drawRemainingTimeArc(ctx, cx, cy, rotation, innerR, outerR, maxOpacity, invertColors = false) {
+      const w = ctx.canvas.width;
+      const h = ctx.canvas.height;
+      
+      const color = invertColors ? '255,255,255' : '0,0,0';
+      
+      // Current position angle
+      const currentAngle = -Math.PI / 2 + rotation;
+      // End of cycle (back to 12 o'clock)
+      const endAngle = -Math.PI / 2 + Math.PI * 2;
+      
+      // Arc length of remaining time
+      const arcLength = endAngle - currentAngle;
+      
+      if (arcLength <= 0.01) return; // Almost no remaining time
+      
+      ctx.save();
+      
+      // Clip to the remaining arc sector (from current to 12 o'clock)
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, outerR, currentAngle, endAngle);
+      ctx.closePath();
+      ctx.clip();
+      
+      // Cut out inner circle if needed
+      ctx.beginPath();
+      ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
+      ctx.arc(cx, cy, innerR, 0, Math.PI * 2, true);
+      ctx.closePath();
+      ctx.clip();
+      
+      // Create conic gradient starting from current position
+      // Dark at current (edge of elapsed), fading toward end of cycle
+      const grad = ctx.createConicGradient(currentAngle, cx, cy);
+      
+      const arcFraction = arcLength / (Math.PI * 2);
+      
+      // Gradient: dark at start (current time), fading toward end
+      grad.addColorStop(0, `rgba(${color},${maxOpacity})`);
+      grad.addColorStop(arcFraction * 0.3, `rgba(${color},${maxOpacity * 0.6})`);
+      grad.addColorStop(arcFraction * 0.7, `rgba(${color},${maxOpacity * 0.25})`);
+      grad.addColorStop(arcFraction, `rgba(${color},0)`);
+      grad.addColorStop(arcFraction + 0.001, `rgba(${color},0)`);
+      grad.addColorStop(1, `rgba(${color},0)`);
+      
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+      
+      ctx.restore();
+    }
+    
+    // Render Hours + Minutes version
+    function renderHM(canvas, hours, minutes, seconds, invertHours, invertColors) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = Math.min(w, h) / 2 - 4;
+      
+      // Clear with background color
+      ctx.fillStyle = invertColors ? 'black' : 'white';
+      ctx.fillRect(0, 0, w, h);
+      
+      const minuteRotation = minutesToRotation(minutes, seconds);
+      const hourRotation = hoursToRotation(hours, minutes);
+      
+      // Minutes: larger circle, from center to edge
+      drawRotatingGradientArc(
+        ctx, cx, cy,
+        minuteRotation,
+        Math.PI * 1.2,      // tail spans ~216 degrees
+        0,                  // from center
+        radius,             // to edge
+        0.6,                // max opacity
+        invertColors
+      );
+      
+      // Hours: smaller circle, overlaps with minutes
+      if (invertHours) {
+        // Remaining time is dark
+        drawRemainingTimeArc(
+          ctx, cx, cy,
+          hourRotation,
+          0,                  // from center
+          radius * 0.65,      // smaller radius
+          0.7,                // max opacity
+          invertColors
+        );
+      } else {
+        // Elapsed time trails behind
+        drawRotatingGradientArc(
+          ctx, cx, cy,
+          hourRotation,
+          Math.PI * 0.8,      // tail spans ~144 degrees
+          0,                  // from center
+          radius * 0.65,      // smaller radius
+          0.7,                // max opacity
+          invertColors
+        );
+      }
+      
+      // Center dot
+      ctx.fillStyle = invertColors ? 'white' : 'black';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // Render Hours + Minutes + Seconds version
+    function renderHMS(canvas, hours, minutes, seconds, milliseconds, invertHours, invertColors) {
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width;
+      const h = canvas.height;
+      const cx = w / 2;
+      const cy = h / 2;
+      const radius = Math.min(w, h) / 2 - 4;
+      
+      // Clear with background color
+      ctx.fillStyle = invertColors ? 'black' : 'white';
+      ctx.fillRect(0, 0, w, h);
+      
+      const secondRotation = secondsToRotation(seconds, milliseconds);
+      const minuteRotation = minutesToRotation(minutes, seconds);
+      const hourRotation = hoursToRotation(hours, minutes);
+      
+      // Seconds: largest circle, lightest
+      drawRotatingGradientArc(
+        ctx, cx, cy,
+        secondRotation,
+        Math.PI * 0.5,      // tail spans ~90 degrees
+        0,                  // from center
+        radius,             // full radius
+        0.4,                // max opacity
+        invertColors
+      );
+      
+      // Minutes: medium circle
+      drawRotatingGradientArc(
+        ctx, cx, cy,
+        minuteRotation,
+        Math.PI * 1.0,      // tail spans ~180 degrees
+        0,                  // from center
+        radius * 0.75,      // medium radius
+        0.55,               // max opacity
+        invertColors
+      );
+      
+      // Hours: smallest circle, densest
+      if (invertHours) {
+        // Remaining time is dark
+        drawRemainingTimeArc(
+          ctx, cx, cy,
+          hourRotation,
+          0,                  // from center
+          radius * 0.5,       // smallest radius
+          0.7,                // max opacity
+          invertColors
+        );
+      } else {
+        // Elapsed time trails behind
+        drawRotatingGradientArc(
+          ctx, cx, cy,
+          hourRotation,
+          Math.PI * 0.7,      // tail spans ~126 degrees
+          0,                  // from center
+          radius * 0.5,       // smallest radius
+          0.7,                // max opacity
+          invertColors
+        );
+      }
+      
+      // Center dot
+      ctx.fillStyle = invertColors ? 'white' : 'black';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    // Animation loop
+    function tick() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const milliseconds = now.getMilliseconds();
+      
+      const invertHours = document.getElementById('invert-hours').checked;
+      const invertColors = document.getElementById('invert-colors').checked;
+      
+      // Render both watches
+      renderHM(
+        document.getElementById('watch-hm'),
+        hours, minutes, seconds,
+        invertHours,
+        invertColors
+      );
+      
+      renderHMS(
+        document.getElementById('watch-hms'),
+        hours, minutes, seconds, milliseconds,
+        invertHours,
+        invertColors
+      );
+      
+      // Update time displays
+      const pad = n => n.toString().padStart(2, '0');
+      document.getElementById('time-hm').textContent = 
+        `${pad(hours)}:${pad(minutes)}`;
+      document.getElementById('time-hms').textContent = 
+        `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+      
+      requestAnimationFrame(tick);
+    }
+    
+    // Start
+    tick();
+  </script>
+</body>
+</html>

@@ -64,11 +64,29 @@ export function markdownToHtml(md, options = {}) {
 
   const resolveUrl = (src) => {
     if (src.startsWith('http://') || src.startsWith('https://')) return src;
-    if (src.startsWith('/')) return baseUrl + src;
-    return baseUrl + '/' + src;
+    if (src.startsWith('/')) return src;
+    // Handle relative paths including ../
+    const baseParts = baseUrl.split('/').filter(Boolean);
+    const srcParts = src.split('/');
+    for (const part of srcParts) {
+      if (part === '..') baseParts.pop();
+      else if (part !== '.') baseParts.push(part);
+    }
+    return baseParts.join('/');
   };
 
   let html = md
+    // Prototype directive: ::prototype{src="..." height="..." caption="..."}
+    .replace(/::prototype\{([^}]+)\}/g, (_, attrs) => {
+      const props = parseDirectiveAttrs(attrs);
+      const src = props.src ? resolveUrl(props.src) : '';
+      const height = props.height || '300';
+      const caption = props.caption || '';
+      return `<figure data-media data-type="prototype">
+        <proto-sandbox src="${src}" height="${height}"></proto-sandbox>
+        ${caption ? `<figcaption>${caption}</figcaption>` : ''}
+      </figure>`;
+    })
     // Images with title (for data-fit attribute)
     // ![alt](src "title") -> <figure data-media data-fit="title">
     .replace(/!\[([^\]]*)\]\(([^)\s]+)\s+"([^"]+)"\)/g, (_, alt, src, title) => {
@@ -151,4 +169,19 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+}
+
+/**
+ * Parse directive attributes: key="value" key2="value2"
+ * @param {string} str - Attribute string
+ * @returns {Object} Parsed key-value pairs
+ */
+function parseDirectiveAttrs(str) {
+  const attrs = {};
+  const regex = /(\w+)=["']([^"']+)["']/g;
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    attrs[match[1]] = match[2];
+  }
+  return attrs;
 }

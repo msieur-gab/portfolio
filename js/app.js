@@ -3,6 +3,7 @@
  */
 
 import './components/scroll-sync.js';
+import './components/proto-sandbox.js';
 import { discoverContent, loadDocument, groupByCategory, FOLDERS } from './services/content.js';
 
 // DOM elements
