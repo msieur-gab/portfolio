@@ -5,6 +5,7 @@
 import './components/scroll-sync.js';
 import './components/proto-sandbox.js';
 import { discoverContent, loadDocument, groupByCategory, FOLDERS } from './services/content.js';
+import { hydrateMedia } from './utils/markdown.js';
 
 // DOM elements
 const cardsContainer = document.getElementById('cards');
@@ -167,6 +168,9 @@ async function openPanel(doc) {
   // Load and render content
   const { html } = await loadDocument(doc);
   content.innerHTML = html;
+
+  // Hydrate charts and flow diagrams
+  await hydrateMedia(content);
 
   // Recompute scroll-sync after DOM update
   requestAnimationFrame(() => {

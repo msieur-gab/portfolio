@@ -102,12 +102,28 @@ export function markdownToHtml(md, options = {}) {
         ${alt ? `<figcaption>${alt}</figcaption>` : ''}
       </figure>`;
     })
-    // Code blocks -> figure[data-media data-type="code"]
-    .replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+    // Code blocks: charts, flows, and regular code
+    .replace(/```([\w-]*)(?:[ \t]+([^\n]*))?\n([\s\S]*?)```/g, (_, lang, options, code) => {
+      const opts = options?.trim() || '';
+      const content = code.trim();
+
+      // Chart blocks: chart-bar, chart-line, chart-pie, etc.
+      // Output as code block with language class for hydration
+      // Normalize content to remove blank lines that would cause paragraph splitting
+      if (lang.startsWith('chart-')) {
+        const normalized = content.replace(/\n\s*\n/g, '\n');
+        return `<figure data-media data-type="chart"><pre><code class="language-${lang}">${escapeHtml(normalized)}</code></pre></figure>`;
+      }
+
+      // Flow diagram blocks - output as code block for hydration
+      if (lang === 'flow') {
+        const normalized = content.replace(/\n\s*\n/g, '\n');
+        return `<figure data-media data-type="flow"><pre><code class="language-flow">${escapeHtml(normalized)}</code></pre></figure>`;
+      }
+
+      // Regular code blocks - keep on single line to prevent paragraph splitting
       const langAttr = lang ? ` data-lang="${lang}"` : '';
-      return `<figure data-media data-type="code"${langAttr}>
-        <pre><code>${escapeHtml(code.trim())}</code></pre>
-      </figure>`;
+      return `<figure data-media data-type="code"${langAttr}><pre><code>${escapeHtml(content)}</code></pre></figure>`;
     })
     // Blockquotes -> figure[data-media data-type="quote"]
     .replace(/(?:^> .+$\n?)+/gm, (match) => {
@@ -184,4 +200,49 @@ function parseDirectiveAttrs(str) {
     attrs[match[1]] = match[2];
   }
   return attrs;
+}
+
+/**
+ * Convert figure to code block fallback
+ * Used when chart/graph plugins are unavailable
+ */
+function fallbackToCodeBlock(figure, content, lang) {
+  figure.dataset.type = 'code';
+  figure.dataset.lang = lang;
+  figure.innerHTML = `<pre><code>${escapeHtml(content)}</code></pre>`;
+  figure.dataset.hydrated = 'true';
+}
+
+/**
+ * Hydrate chart and flow figures with rendered SVG
+ * Falls back to code block display if plugins unavailable
+ * @param {Element} container - Container element to search within
+ */
+export async function hydrateMedia(container) {
+  // Hydrate charts using the new hydrate() function
+  const chartFigures = container.querySelectorAll('figure[data-type="chart"]');
+  if (chartFigures.length > 0) {
+    try {
+      const { hydrate } = await import('./charts.js');
+      // Hydrate charts within this container
+      hydrate(container);
+      // Mark figures as hydrated
+      chartFigures.forEach(fig => fig.dataset.hydrated = 'true');
+    } catch (e) {
+      console.warn('Chart plugin unavailable:', e.message);
+      // Keep as code blocks (fallback already in place)
+    }
+  }
+
+  // Hydrate flow diagrams using the new hydrate() function
+  const flowFigures = container.querySelectorAll('figure[data-type="flow"]');
+  if (flowFigures.length > 0) {
+    try {
+      const { hydrate: hydrateFlows } = await import('./graphs.js');
+      await hydrateFlows(container);
+      flowFigures.forEach(fig => fig.dataset.hydrated = 'true');
+    } catch (e) {
+      console.warn('Graph plugin unavailable:', e.message);
+    }
+  }
 }
