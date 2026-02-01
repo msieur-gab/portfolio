@@ -11,7 +11,7 @@
  *   Series1, 10, 20, 30
  */
 
-// ─── Theme (using CSS variables directly for live updates) ───
+// ─── Theme (CSS variables for live theme switching) ─────
 const pal = () => [
   'var(--fc-p1, #c8a030)',
   'var(--fc-p2, #a07828)',
@@ -40,7 +40,7 @@ function el(tag, attrs) {
 function txt(x, y, str, o = {}) {
   const t = el('text', {
     x, y, fill: o.fill || col().dim,
-    'font-family': "var(--font-mono, ui-monospace, 'SF Mono', monospace)",
+    'font-family': "var(--fc-mono, ui-monospace, 'SF Mono', monospace)",
     'font-size': o.size || 8,
     'text-anchor': o.anchor || 'middle',
     'dominant-baseline': o.baseline || 'auto',

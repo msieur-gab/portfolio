@@ -36,7 +36,6 @@
   --chart-s8: #ccc;
 
   /* FlowCharts & FlowDiagrams CSS variables */
-  --fc-palette: #c8a030, #a07828, #d4b450, #8a6020, #e0c868, #705018;
   --fc-p1: #c8a030;
   --fc-p2: #a07828;
   --fc-p3: #d4b450;
@@ -78,7 +77,6 @@
   --chart-s8: #444;
 
   /* FlowCharts & FlowDiagrams dark theme */
-  --fc-palette: #e08098, #c06078, #f0a0b8, #a04860, #f4b8c8, #883850;
   --fc-p1: #e08098;
   --fc-p2: #c06078;
   --fc-p3: #f0a0b8;
