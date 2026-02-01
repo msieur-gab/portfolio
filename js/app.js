@@ -27,7 +27,7 @@ let currentDoc = null;
 // Theme and font size
 function initTheme() {
   const saved = localStorage.getItem('theme');
-  if (saved) {
+  if (saved !== null) {
     document.documentElement.dataset.theme = saved;
   } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.dataset.theme = 'dark';
@@ -59,8 +59,10 @@ function initFontSize() {
 // Handedness
 function initHandedness() {
   const saved = localStorage.getItem('handed');
-  if (saved) {
-    document.documentElement.dataset.handed = saved;
+  if (saved !== null) {
+    if (saved) {
+      document.documentElement.dataset.handed = saved;
+    }
     updateScrollSyncPosition(saved);
   }
 }
