@@ -61,7 +61,8 @@ body {
 /* Shared header styles */
 .site-header,
 .panel-header {
-  padding: 1.5rem 2rem;
+  height: var(--header-height);
+  padding: 0 2rem;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg);
 }
@@ -422,7 +423,7 @@ article figure[data-media] pre {
 
   .site-header,
   .panel-header {
-    padding: 1rem;
+    padding: 0 1rem;
   }
 
   .site-title,
