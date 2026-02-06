@@ -121,6 +121,19 @@ function createCard(doc) {
     card.appendChild(description);
   }
 
+  const tags = doc.frontmatter.tags;
+  if (tags && tags.length) {
+    const tagList = document.createElement('div');
+    tagList.className = 'card-tags';
+    for (const tag of tags.slice(0, 5)) {
+      const span = document.createElement('span');
+      span.className = 'card-tag';
+      span.textContent = tag;
+      tagList.appendChild(span);
+    }
+    card.appendChild(tagList);
+  }
+
   card.addEventListener('click', () => openPanel(doc));
 
   return card;
