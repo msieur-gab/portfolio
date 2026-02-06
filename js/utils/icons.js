@@ -1,100 +1,120 @@
 /**
- * Icon registry for flow diagrams and charts
+ * Icon registry — Tabler Icons, 24×24 stroke-based SVG inner markup
  *
- * Each icon is a 16x16 viewBox SVG path.
+ * Source: @tabler/icons (MIT). Each entry stores the SVG inner markup
+ * for a 24×24 viewBox using currentColor for theme-aware rendering.
+ *
  * Usage:
  *   import { getIcon, getIconSvg } from './icons.js';
- *   const path = getIcon('lock');
- *   const svg = getIconSvg('lock', 16);
+ *   const markup = getIcon('lock');        // SVG inner markup or null
+ *   const svg    = getIconSvg('lock', 24); // complete <svg> element string
  */
 
 const ICONS = {
-  // People & Roles
-  user: 'M8 7a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 9a5 5 0 0 1 10 0H3z',
-  users: 'M6 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm6 0a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM1 14a5 5 0 0 1 10 0H1zm9 0a4 4 0 0 1 5 0h-5z',
+  // ─── People & Roles ──────────────────────────────────
+  user: '<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" /><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />',
 
-  // Security
-  lock: 'M4 7V5a4 4 0 0 1 8 0v2h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1zm2 0h4V5a2 2 0 0 0-4 0v2zm2 3a1 1 0 0 1 1 1v1a1 1 0 0 1-2 0v-1a1 1 0 0 1 1-1z',
-  unlock: 'M4 7V5a4 4 0 0 1 7.87-.8h.01l-.01.1V7H13a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1h1zm2 0h4V5a2 2 0 0 0-4 0v2z',
-  key: 'M12.7 1.3a1 1 0 0 1 0 1.4l-1 1L13 5l-1.5 1.5L10.2 5.2l-3.5 3.5A3.5 3.5 0 1 1 5.3 7.3l5-5a1 1 0 0 1 1.4 0zM4.5 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2z',
-  shield: 'M8 1l6 2.5v4c0 3.5-2.5 6.5-6 7.5-3.5-1-6-4-6-7.5v-4L8 1zm0 2.2L4 5v3.5c0 2.5 1.8 4.8 4 5.5 2.2-.7 4-3 4-5.5V5L8 3.2z',
+  users: '<path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />',
 
-  // Data & Storage
-  database: 'M8 1C4.5 1 2 2.1 2 3.5v9C2 13.9 4.5 15 8 15s6-1.1 6-2.5v-9C14 2.1 11.5 1 8 1zM8 3c2.8 0 4 .7 4 1s-1.2 1-4 1-4-.7-4-1 1.2-1 4-1zm4 9.5c0 .3-1.2 1-4 1s-4-.7-4-1v-2a8.5 8.5 0 0 0 4 .8 8.5 8.5 0 0 0 4-.8v2zm0-4c0 .3-1.2 1-4 1s-4-.7-4-1v-2A8.5 8.5 0 0 0 8 7.3a8.5 8.5 0 0 0 4-.8v2z',
-  file: 'M4 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5l-4-4H4zm5 0v3a1 1 0 0 0 1 1h3',
-  folder: 'M2 3a1 1 0 0 1 1-1h4l2 2h4a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3z',
-  disk: 'M3 2a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V4.4L11.6 2H3zm5 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM4 3h6v2H4V3z',
+  // ─── Security ────────────────────────────────────────
+  lock: '<path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" />',
 
-  // Network & Cloud
-  cloud: 'M4.5 13A3.5 3.5 0 0 1 2 8a3.5 3.5 0 0 1 2.1-3.2A5 5 0 0 1 13 6a3 3 0 0 1 1 5.8V13H4.5z',
-  server: 'M2 3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3zm0 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8zm0 5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1zM11 4h1v1h-1zM11 9h1v1h-1z',
-  globe: 'M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 2c.7 0 1.5 1.2 1.9 3H6.1C6.5 4.2 7.3 3 8 3zm-3 5h6a9 9 0 0 1-.1 1.5H5.1A9 9 0 0 1 5 8zm0-1.5A9 9 0 0 1 5.1 5h5.8a9 9 0 0 1 .1 1.5H5z',
-  radio: 'M8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3-1a3 3 0 0 1-1.5 2.6l.7 1.2A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-2.3-3.8l-.7 1.2A3 3 0 0 1 11 8zM5 8a3 3 0 0 0 1.5 2.6l-.7 1.2A4.5 4.5 0 0 1 3.5 8a4.5 4.5 0 0 1 2.3-3.8l.7 1.2A3 3 0 0 0 5 8z',
-  wifi: 'M8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-2.5-3a3.5 3.5 0 0 1 5 0l-1 1a2 2 0 0 0-3 0l-1-1zm-2-2a6 6 0 0 1 9 0l-1 1a4.5 4.5 0 0 0-7 0l-1-1zm-2-2a8.5 8.5 0 0 1 13 0l-1 1a7 7 0 0 0-11 0l-1-1z',
+  unlock: '<path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -6" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" /><path d="M8 11v-5a4 4 0 0 1 8 0" />',
 
-  // Process & Flow
-  play: 'M4 2.5v11l9-5.5z',
-  pause: 'M4 2h3v12H4zm5 0h3v12H9z',
-  stop: 'M3 3h10v10H3z',
-  refresh: 'M2 8a6 6 0 0 1 10.3-4.2L14 2v5h-5l1.8-1.8A4 4 0 0 0 4 8a4 4 0 0 0 6.9 2.7l1.5 1A6 6 0 0 1 2 8z',
-  cog: 'M7 1l-.5 2.1a5 5 0 0 0-1.7 1L2.8 3 1.5 5.3l1.8 1.2a5 5 0 0 0 0 2l-1.8 1.2L2.8 12l2-1.1a5 5 0 0 0 1.7 1L7 14h2l.5-2.1a5 5 0 0 0 1.7-1l2 1.1 1.3-2.3-1.8-1.2a5 5 0 0 0 0-2l1.8-1.2L13.2 3l-2 1.1a5 5 0 0 0-1.7-1L9 1H7zm1 5a2 2 0 1 1 0 4 2 2 0 0 1 0-4z',
+  key: '<path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0" /><path d="M15 9h.01" />',
 
-  // Devices & Hardware
-  phone: 'M5 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5zm1 2h4v9H6V3zm2 10.5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z',
-  speaker: 'M3 5h2l4-3v12L5 11H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm9 .5a4 4 0 0 1 0 5l-1-1a2.5 2.5 0 0 0 0-3l1-1z',
-  chip: 'M5 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5zM3 6H1v1h2zm0 3H1v1h2zm10-3h2v1h-2zm0 3h2v1h-2zM6 3V1h1v2zm3 0V1h1v2zM6 15v-2h1v2zm3 0v-2h1v2z',
-  nfc: 'M8 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 2a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2a7 7 0 1 0 0-14 7 7 0 0 0 0 14z',
+  shield: '<path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />',
 
-  // Arrows & Indicators
-  arrowRight: 'M2 8h10m-4-4 4 4-4 4',
-  arrowDown: 'M8 2v10m-4-4 4 4 4-4',
-  check: 'M3 8l3.5 4L13 4',
-  x: 'M4 4l8 8m0-8L4 12',
-  info: 'M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-1 4h2v4H7V8z',
-  warning: 'M8 1L1 14h14L8 1zm0 4v4m0 2v1',
+  // ─── Data & Storage ──────────────────────────────────
+  database: '<path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0 -16 0" /><path d="M4 6v6a8 3 0 0 0 16 0v-6" /><path d="M4 12v6a8 3 0 0 0 16 0v-6" />',
 
-  // Communication
-  mail: 'M2 4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4zm1 0l5 4 5-4',
-  chat: 'M3 2h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7l-3 3v-3H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z',
-  link: 'M6.5 8.5a3 3 0 0 0 4.2.3l2-2a3 3 0 0 0-4.2-4.2L7.3 3.8m2.2 3.7a3 3 0 0 0-4.2-.3l-2 2a3 3 0 0 0 4.2 4.2l1.2-1.2',
+  file: '<path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2" />',
+
+  folder: '<path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" />',
+
+  disk: '<path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2" /><path d="M10 14a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M14 4l0 4l-6 0l0 -4" />',
+
+  // ─── Network & Cloud ─────────────────────────────────
+  cloud: '<path d="M6.657 18c-2.572 0 -4.657 -2.007 -4.657 -4.483c0 -2.475 2.085 -4.482 4.657 -4.482c.393 -1.762 1.794 -3.2 3.675 -3.773c1.88 -.572 3.956 -.193 5.444 1c1.488 1.19 2.162 3.007 1.77 4.769h.99c1.913 0 3.464 1.56 3.464 3.486c0 1.927 -1.551 3.487 -3.465 3.487h-11.878" />',
+
+  server: '<path d="M3 7a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3" /><path d="M3 15a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v2a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -2" /><path d="M7 8l0 .01" /><path d="M7 16l0 .01" />',
+
+  globe: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M3.6 9h16.8" /><path d="M3.6 15h16.8" /><path d="M11.5 3a17 17 0 0 0 0 18" /><path d="M12.5 3a17 17 0 0 1 0 18" />',
+
+  radio: '<path d="M18.364 19.364a9 9 0 1 0 -12.728 0" /><path d="M15.536 16.536a5 5 0 1 0 -7.072 0" /><path d="M11 13a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />',
+
+  wifi: '<path d="M12 18l.01 0" /><path d="M9.172 15.172a4 4 0 0 1 5.656 0" /><path d="M6.343 12.343a8 8 0 0 1 11.314 0" /><path d="M3.515 9.515c4.686 -4.687 12.284 -4.687 17 0" />',
+
+  // ─── Process & Flow ──────────────────────────────────
+  play: '<path d="M7 4v16l13 -8l-13 -8" />',
+
+  pause: '<path d="M6 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12" /><path d="M14 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1l0 -12" />',
+
+  stop: '<path d="M5 7a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -10" />',
+
+  refresh: '<path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" /><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />',
+
+  cog: '<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />',
+
+  // ─── Devices & Hardware ──────────────────────────────
+  phone: '<path d="M6 5a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2v-14" /><path d="M11 4h2" /><path d="M12 17v.01" />',
+
+  speaker: '<path d="M15 8a5 5 0 0 1 0 8" /><path d="M17.7 5a9 9 0 0 1 0 14" /><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5" />',
+
+  chip: '<path d="M5 6a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1l0 -12" /><path d="M9 9h6v6h-6l0 -6" /><path d="M3 10h2" /><path d="M3 14h2" /><path d="M10 3v2" /><path d="M14 3v2" /><path d="M21 10h-2" /><path d="M21 14h-2" /><path d="M14 21v-2" /><path d="M10 21v-2" />',
+
+  nfc: '<path d="M11 20a3 3 0 0 1 -3 -3v-11l5 5" /><path d="M13 4a3 3 0 0 1 3 3v11l-5 -5" /><path d="M4 7a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v10a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3l0 -10" />',
+
+  // ─── Arrows & Indicators ─────────────────────────────
+  arrowRight: '<path d="M5 12l14 0" /><path d="M13 18l6 -6" /><path d="M13 6l6 6" />',
+
+  arrowDown: '<path d="M12 5l0 14" /><path d="M18 13l-6 6" /><path d="M6 13l6 6" />',
+
+  check: '<path d="M5 12l5 5l10 -10" />',
+
+  x: '<path d="M18 6l-12 12" /><path d="M6 6l12 12" />',
+
+  info: '<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 9h.01" /><path d="M11 12h1v4h1" />',
+
+  warning: '<path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0" /><path d="M12 16h.01" />',
+
+  // ─── Communication ───────────────────────────────────
+  mail: '<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /><path d="M3 7l9 6l9 -6" />',
+
+  chat: '<path d="M8 9h8" /><path d="M8 13h6" /><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12" />',
+
+  link: '<path d="M9 15l6 -6" /><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" /><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463" />',
+
+  // ─── UI ──────────────────────────────────────────────
+  sun: '<path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />',
+
+  moon: '<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />',
+
+  'hand-right': '<path d="M8 13v-7.5a1.5 1.5 0 0 1 3 0v6.5" /><path d="M11 5.5v-2a1.5 1.5 0 1 1 3 0v8.5" /><path d="M14 5.5a1.5 1.5 0 0 1 3 0v6.5" /><path d="M17 7.5a1.5 1.5 0 0 1 3 0v8.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" />',
+
+  'hand-left': '<g transform="translate(24,0) scale(-1,1)"><path d="M8 13v-7.5a1.5 1.5 0 0 1 3 0v6.5" /><path d="M11 5.5v-2a1.5 1.5 0 1 1 3 0v8.5" /><path d="M14 5.5a1.5 1.5 0 0 1 3 0v6.5" /><path d="M17 7.5a1.5 1.5 0 0 1 3 0v8.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7a69.74 69.74 0 0 1 -.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47" /></g>',
+
+  close: '<path d="M18 6l-12 12" /><path d="M6 6l12 12" />',
 };
 
 /**
- * Get icon path data by name
+ * Get icon SVG inner markup by name
  * @param {string} name - Icon name
- * @returns {string|null} SVG path data or null if not found
+ * @returns {string|null} SVG inner markup or null if not found
  */
 export function getIcon(name) {
   return ICONS[name] || null;
 }
 
 /**
- * Get full SVG element string for an icon
+ * Get a complete <svg> element string for an icon
  * @param {string} name - Icon name
- * @param {number} size - Icon size in pixels (default 16)
- * @param {string} fill - Fill color (default 'currentColor')
+ * @param {number} size - Icon size in pixels (default 24)
  * @returns {string} SVG element string or empty string if not found
  */
-export function getIconSvg(name, size = 16, fill = 'currentColor') {
-  const path = ICONS[name];
-  if (!path) return '';
+export function getIconSvg(name, size = 24) {
+  const markup = ICONS[name];
+  if (!markup) return '';
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="${size}" height="${size}" fill="${fill}"><path d="${path}" fill-rule="evenodd"/></svg>`;
-}
-
-/**
- * Check if an icon exists
- * @param {string} name - Icon name
- * @returns {boolean}
- */
-export function hasIcon(name) {
-  return name in ICONS;
-}
-
-/**
- * Get all available icon names
- * @returns {string[]}
- */
-export function getIconNames() {
-  return Object.keys(ICONS);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${markup}</svg>`;
 }

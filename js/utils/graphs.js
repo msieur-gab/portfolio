@@ -361,20 +361,24 @@ function renderSVG({ graph: g, meta }) {
     }));
 
     // Icon + label
-    const iconPath = n.icon && getIcon(n.icon);
-    if (iconPath) {
+    const iconMarkup = n.icon && getIcon(n.icon);
+    if (iconMarkup) {
       const tw = measure(n.label, C.fontSize);
       const total = tw + C.iconSize + C.iconGap;
       const ix = n.x - total / 2;
       const iy = n.y - C.iconSize / 2;
 
-      const iconG = el('g', { transform: `translate(${ix},${iy})` });
-      iconG.appendChild(el('path', {
-        d: iconPath,
-        fill: t.fg,
-        'fill-rule': 'evenodd',
-        opacity: 0.55,
-      }));
+      const scale = C.iconSize / 24;
+      const iconG = el('g', {
+        transform: `translate(${ix},${iy}) scale(${scale})`,
+        fill: 'none',
+        stroke: t.fg,
+        'stroke-width': 2,
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round',
+      });
+      iconG.style.opacity = '0.55';
+      iconG.innerHTML = iconMarkup;
       main.appendChild(iconG);
 
       const tx = ix + C.iconSize + C.iconGap + tw / 2;
