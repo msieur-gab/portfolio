@@ -75,7 +75,22 @@ async function probeFile(filepath) {
 }
 
 /**
- * Scan a folder for markdown files via directory listing
+ * Load file list from static manifest
+ * @returns {Promise<string[]>} - List of file paths, or empty if unavailable
+ */
+async function loadManifest() {
+  try {
+    const res = await fetch(`${CONTENT_BASE}/manifest.json`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.files || [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Scan a folder for markdown files via directory listing (local dev fallback)
  * @param {string|null} folder - Folder name or null for root
  * @returns {Promise<string[]>} - List of file paths
  */
@@ -97,18 +112,38 @@ async function scanFolder(folder) {
 }
 
 /**
+ * Get all content file paths — manifest first, directory scanning fallback
+ * @returns {Promise<string[]>}
+ */
+async function discoverFiles() {
+  const manifest = await loadManifest();
+  if (manifest.length > 0) return manifest;
+
+  // Fallback: scan directories (works on local dev servers)
+  const allFiles = [];
+  const rootFiles = await scanFolder(null);
+  allFiles.push(...rootFiles);
+
+  for (const folder of FOLDERS) {
+    const files = await scanFolder(folder);
+    allFiles.push(...files);
+  }
+
+  return allFiles;
+}
+
+/**
  * Discover all documents in the content folder
  * @returns {Promise<{ docs: Doc[], introDoc: Doc|null }>}
  */
 export async function discoverContent() {
   let introDoc = null;
+  const allFiles = await discoverFiles();
 
-  // Scan root for intro file
-  const rootFiles = await scanFolder(null);
-
+  // Find intro file
   for (const introName of INTRO_FILES) {
     const introPath = `content/${introName}`;
-    if (rootFiles.includes(introPath)) {
+    if (allFiles.includes(introPath)) {
       introDoc = await probeFile(introPath);
       if (introDoc) {
         introDoc.id = 'home';
@@ -118,25 +153,10 @@ export async function discoverContent() {
     }
   }
 
-  // Scan category folders
-  const allDocs = [];
-
-  for (const folder of FOLDERS) {
-    const files = await scanFolder(folder);
-    const results = await Promise.all(files.map(probeFile));
-    allDocs.push(...results.filter(Boolean));
-  }
-
-  // Include root .md files that aren't intro
-  const rootDocs = await Promise.all(
-    rootFiles
-      .filter(f => !INTRO_FILES.some(intro => f.endsWith(intro)))
-      .map(probeFile)
-  );
-  allDocs.push(...rootDocs.filter(Boolean));
-
-  // Sort by title
-  const docs = allDocs.sort((a, b) => a.label.localeCompare(b.label));
+  // Probe all non-intro files
+  const contentFiles = allFiles.filter(f => !INTRO_FILES.some(intro => f.endsWith(intro)));
+  const results = await Promise.all(contentFiles.map(probeFile));
+  const docs = results.filter(Boolean).sort((a, b) => a.label.localeCompare(b.label));
 
   return { docs, introDoc };
 }

@@ -1,0 +1,20 @@
+{
+  "files": [
+    "content/about.md",
+    "content/projects/cypher.md",
+    "content/projects/meditation-wheel.md",
+    "content/projects/nexus.md",
+    "content/projects/pebbble.md",
+    "content/projects/scroll-sync.md",
+    "content/projects/vroom.md",
+    "content/research/design-has-no-method.md",
+    "content/research/lord-of-the-screen.md",
+    "content/research/there-are-no-problems.md",
+    "content/research/what-wants-to-happen.md",
+    "content/experiments/charts-graphs.md",
+    "content/experiments/penumbra.md",
+    "content/experiments/renderer.md",
+    "content/projects/draft-project.md",
+    "content/research/draft-article.md"
+  ]
+}
