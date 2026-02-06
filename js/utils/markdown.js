@@ -102,8 +102,9 @@ export function markdownToHtml(md, options = {}) {
       const src = props.src ? resolveUrl(props.src) : '';
       const height = props.height || '300';
       const caption = props.caption || '';
+      const bgAttr = props.bg ? ` bg="${props.bg}"` : '';
       return `<figure data-media data-type="prototype">
-        <proto-sandbox src="${src}" height="${height}"></proto-sandbox>
+        <proto-sandbox src="${src}" height="${height}"${bgAttr}></proto-sandbox>
         ${caption ? `<figcaption>${caption}</figcaption>` : ''}
       </figure>`;
     })
@@ -173,7 +174,10 @@ export function markdownToHtml(md, options = {}) {
     // Inline formatting
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    .replace(/~~([^~]+)~~/g, '<del>$1</del>')
+    .replace(/~~([^~]+)~~/g, (_, text) => {
+      const redacted = text.replace(/\S/g, 'X');
+      return `<del>${redacted}</del>`;
+    })
     .replace(/==([^=]+)==/g, '<mark>$1</mark>')
     .replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`)
     // Links

@@ -6,7 +6,7 @@
 
 /* Design tokens */
 :root {
-  --color-bg: #fafafa;
+  --color-bg: #cacaca;
   --color-text: #1a1a1a;
   --color-muted: #666;
   --color-border: #e0e0e0;
@@ -22,17 +22,23 @@
   --scroll-sync-media-bg: var(--color-media-bg);
   --scroll-sync-caption-color: var(--color-muted);
 
+  /* Effect variables */
+  --color-marked-fx: #fefcbf;
+  --color-deleted-fx: #243539;
+  --marked-fx: url(pen-brushes-8.svg);
+  --deleted-fx: url(pen-brushes-9.svg);
+
   /* Chart & diagram CSS variables */
-  --chart-p1: #c8a030;
-  --chart-p2: #a07828;
-  --chart-p3: #d4b450;
-  --chart-p4: #8a6020;
-  --chart-p5: #e0c868;
-  --chart-p6: #705018;
-  --chart-fg: #1a1a1a;
+  --chart-p1: #fefcbf;
+  --chart-p2: #f5f08a;
+  --chart-p3: #ebe666;
+  --chart-p4: #d4cc42;
+  --chart-p5: #bdb21e;
+  --chart-p6: #a39800;
+  --chart-fg: var(--color-text);
   --chart-dim: #999;
-  --chart-grid: #e0e0de;
-  --chart-bg: #fafaf8;
+  --chart-grid: var(--color-border);
+  --chart-bg: var(--color-bg);
   --chart-surface: #fff;
   --chart-node-fill: #fff;
   --chart-node-stroke: #bbb;
@@ -43,24 +49,24 @@
 
 /* Dark theme */
 [data-theme="dark"] {
-  --color-bg: #1a1a1a;
+  --color-bg: #242529;
   --color-text: #e8e8e8;
   --color-muted: #999;
   --color-border: #333;
   --color-surface: #242424;
   --color-media-bg: #2a2a2a;
 
+  /* Effect variables — dark theme */
+  --color-marked-fx: #ffbdc9;
+  --color-deleted-fx: #ebebeb;
+
   /* Chart & diagram dark theme */
-  --chart-p1: #e08098;
-  --chart-p2: #c06078;
-  --chart-p3: #f0a0b8;
-  --chart-p4: #a04860;
-  --chart-p5: #f4b8c8;
-  --chart-p6: #883850;
-  --chart-fg: #e4e4e7;
-  --chart-dim: #71717a;
-  --chart-grid: #2a2a2e;
-  --chart-bg: #0e0e10;
+  --chart-p1: #ffbdc9;
+  --chart-p2: #ff9fb0;
+  --chart-p3: #ff8197;
+  --chart-p4: #ff637e;
+  --chart-p5: #ff4565;
+  --chart-p6: #e6274c;
   --chart-surface: #18181b;
   --chart-node-fill: #1e1e22;
   --chart-node-stroke: #555;
@@ -556,8 +562,34 @@ article em {
 }
 
 article mark {
-  background: rgba(255, 200, 0, 0.3);
-  padding: 0 0.2rem;
+  display: inline;
+  -webkit-mask-image: var(--marked-fx);
+  mask-image: var(--marked-fx);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  background-color: var(--color-marked-fx);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: .2rem .5rem;
+}
+
+article del {
+  display: inline;
+  -webkit-mask-image: var(--deleted-fx);
+  mask-image: var(--deleted-fx);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  background-color: var(--color-deleted-fx);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: .2rem .5rem;
+  margin: .1rem;
+  color: transparent !important;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 article code {

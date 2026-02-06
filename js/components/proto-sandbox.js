@@ -16,6 +16,7 @@ export class ProtoSandbox extends LitElement {
   static properties = {
     src: { type: String },
     height: { type: String },
+    bg: { type: String },
     _content: { state: true },
     _loading: { state: true },
     _error: { state: true }
@@ -27,11 +28,7 @@ export class ProtoSandbox extends LitElement {
       width: 100%;
       border-radius: 8px;
       overflow: hidden;
-      background: var(--proto-bg, #f5f5f5);
-    }
-
-    :host-context([data-theme="dark"]) {
-      --proto-bg: #1a1a1a;
+      background: var(--proto-bg, transparent);
     }
 
     .sandbox-frame {
@@ -82,6 +79,7 @@ export class ProtoSandbox extends LitElement {
     super();
     this.src = '';
     this.height = '300';
+    this.bg = '';
     this._content = null;
     this._loading = true;
     this._error = null;
@@ -97,6 +95,13 @@ export class ProtoSandbox extends LitElement {
   updated(changedProperties) {
     if (changedProperties.has('src') && this.src) {
       this._loadPrototype();
+    }
+    if (changedProperties.has('bg')) {
+      if (this.bg) {
+        this.style.setProperty('--proto-bg', this.bg);
+      } else {
+        this.style.removeProperty('--proto-bg');
+      }
     }
   }
 
@@ -127,6 +132,7 @@ export class ProtoSandbox extends LitElement {
 
     // Get computed CSS variables from document for theme bridging
     const computedStyle = getComputedStyle(document.documentElement);
+    const bgOverride = this.bg ? `body { background: ${this.bg}; }` : '';
     const themeVars = `
       <style>
         :root {
@@ -136,6 +142,7 @@ export class ProtoSandbox extends LitElement {
           --font-sans: ${computedStyle.getPropertyValue('--font-sans').trim() || 'system-ui'};
           --font-mono: ${computedStyle.getPropertyValue('--font-mono').trim() || 'monospace'};
         }
+        ${bgOverride}
       </style>
     `;
 
