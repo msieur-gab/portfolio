@@ -216,10 +216,6 @@ export class ScrollSync extends LitElement {
     this._onResize = this._onResize.bind(this);
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-  }
-
   firstUpdated() {
     this._initialize();
   }
