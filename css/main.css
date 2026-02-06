@@ -716,9 +716,6 @@ article figure[data-media] pre {
   article figure[data-media] {
     height: auto;
     overflow: visible;
-    background: var(--color-media-bg);
-    padding: 1rem;
-    border-radius: 4px;
   }
 
   article figure[data-media] img,
