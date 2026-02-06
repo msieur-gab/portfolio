@@ -118,7 +118,8 @@ export function markdownToHtml(md, options = {}) {
       // Flow diagram blocks - output as code block for hydration
       if (lang === 'flow') {
         const normalized = content.replace(/\n\s*\n/g, '\n');
-        return `<figure data-media data-type="flow"><pre><code class="language-flow">${escapeHtml(normalized)}</code></pre></figure>`;
+        const dirAttr = opts ? ` data-dir="${escapeHtml(opts)}"` : '';
+        return `<figure data-media data-type="flow"><pre><code class="language-flow"${dirAttr}>${escapeHtml(normalized)}</code></pre></figure>`;
       }
 
       // Regular code blocks - keep on single line to prevent paragraph splitting
@@ -140,6 +141,15 @@ export function markdownToHtml(md, options = {}) {
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    // Lists (must come before inline formatting — * conflicts with emphasis)
+    .replace(/(^\* .+$\n?)+/gm, (match) => {
+      const items = match.trim().split('\n').map(l => `<li>${l.replace(/^\* /, '')}</li>`).join('\n');
+      return `<ul>${items}</ul>`;
+    })
+    .replace(/(^\d+\. .+$\n?)+/gm, (match) => {
+      const items = match.trim().split('\n').map(l => `<li>${l.replace(/^\d+\. /, '')}</li>`).join('\n');
+      return `<ol>${items}</ol>`;
+    })
     // Inline formatting
     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
@@ -147,12 +157,7 @@ export function markdownToHtml(md, options = {}) {
     .replace(/==([^=]+)==/g, '<mark>$1</mark>')
     .replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`)
     // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-    // Unordered lists
-    .replace(/^\* (.+)$/gm, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
-    // Ordered lists
-    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 
   // Wrap remaining plain text in paragraphs
   html = html

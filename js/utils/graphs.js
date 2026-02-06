@@ -422,6 +422,7 @@ export async function hydrate(root) {
 
   for (const code of codeBlocks) {
     const content = code.textContent;
+    const dir = code.dataset.dir || '';
     const wrap = document.createElement('div');
     wrap.className = 'fc-diagram';
     wrap.style.cssText = 'display:flex;justify-content:center;align-items:center;width:100%;height:100%;';
@@ -433,6 +434,6 @@ export async function hydrate(root) {
       code.replaceWith(wrap);
     }
 
-    await render(wrap, content);
+    await render(wrap, content, dir ? { dir } : {});
   }
 }
