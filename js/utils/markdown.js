@@ -230,7 +230,13 @@ export async function hydrateMedia(container) {
       chartFigures.forEach(fig => fig.dataset.hydrated = 'true');
     } catch (e) {
       console.warn('Chart plugin unavailable:', e.message);
-      // Keep as code blocks (fallback already in place)
+      chartFigures.forEach(fig => {
+        const code = fig.querySelector('code');
+        if (code) {
+          const lang = code.className.match(/language-([\w-]+)/)?.[1] || 'chart';
+          fallbackToCodeBlock(fig, code.textContent, lang);
+        }
+      });
     }
   }
 
@@ -243,6 +249,12 @@ export async function hydrateMedia(container) {
       flowFigures.forEach(fig => fig.dataset.hydrated = 'true');
     } catch (e) {
       console.warn('Graph plugin unavailable:', e.message);
+      flowFigures.forEach(fig => {
+        const code = fig.querySelector('code');
+        if (code) {
+          fallbackToCodeBlock(fig, code.textContent, 'flow');
+        }
+      });
     }
   }
 }
