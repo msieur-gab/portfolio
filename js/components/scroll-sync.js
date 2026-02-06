@@ -178,7 +178,6 @@ export class ScrollSync extends LitElement {
     @media (max-width: 900px) {
       :host {
         display: block;
-        padding: 16px;
       }
 
       .media-container,

@@ -17,7 +17,7 @@
   --font-mono: "SF Mono", Monaco, Consolas, "Liberation Mono", monospace;
 
   --panel-width: min(80vw, calc(100vw - 320px));
-  --header-height: 120px;
+  --header-height: 64px;
 
   --scroll-sync-media-bg: var(--color-media-bg);
   --scroll-sync-caption-color: var(--color-muted);
@@ -196,6 +196,23 @@ body {
 .icon-hand-left { display: none; }
 [data-handed="left"] .icon-hand-right { display: none; }
 [data-handed="left"] .icon-hand-left { display: block; }
+
+/* Site intro */
+.site-intro {
+  max-width: 42rem;
+  padding: 2rem 2rem 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  transition: opacity 0.3s ease;
+}
+
+body.panel-open .site-intro {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
 
 /* Main container */
 .main-container {
@@ -490,7 +507,6 @@ article figure[data-media] pre {
 @media (max-width: 900px) {
   :root {
     --panel-width: 100vw;
-    --header-height: 100px;
   }
 
   .site-header,
