@@ -20,23 +20,43 @@ export function parseFrontmatter(md) {
   let inArray = false;
 
   match[1].split('\n').forEach(line => {
-    // Array item
-    if (line.match(/^\s+-\s+(.+)$/)) {
-      const value = line.match(/^\s+-\s+(.+)$/)[1].replace(/^["']|["']$/g, '');
-      if (currentKey && Array.isArray(frontmatter[currentKey])) {
-        frontmatter[currentKey].push(value);
+    // Indented line — either array item or nested key-value
+    if (/^\s+/.test(line)) {
+      // Array item: "  - value"
+      const arrMatch = line.match(/^\s+-\s+(.+)$/);
+      if (arrMatch) {
+        const value = arrMatch[1].replace(/^["']|["']$/g, '');
+        if (currentKey && Array.isArray(frontmatter[currentKey])) {
+          frontmatter[currentKey].push(value);
+        }
+        return;
       }
+
+      // Nested key-value: "  key: value"
+      const nestedKv = line.match(/^\s+(\w+):\s+(.+)$/);
+      if (nestedKv && currentKey) {
+        const nKey = nestedKv[1];
+        const nVal = nestedKv[2].replace(/^["']|["']$/g, '');
+        // Convert empty array to object if needed
+        if (Array.isArray(frontmatter[currentKey]) && frontmatter[currentKey].length === 0) {
+          frontmatter[currentKey] = {};
+        }
+        if (typeof frontmatter[currentKey] === 'object' && !Array.isArray(frontmatter[currentKey])) {
+          frontmatter[currentKey][nKey] = nVal;
+        }
+        return;
+      }
+
       return;
     }
 
-    // Key-value pair
+    // Top-level key-value pair
     const kvMatch = line.match(/^(\w+):\s*(.*)$/);
     if (kvMatch) {
       currentKey = kvMatch[1];
       const value = kvMatch[2].replace(/^["']|["']$/g, '');
 
       if (value === '') {
-        // Could be start of array or nested object - check next lines
         frontmatter[currentKey] = [];
         inArray = true;
       } else {

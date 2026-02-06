@@ -5,7 +5,9 @@
 import './components/scroll-sync.js';
 import './components/proto-sandbox.js';
 import { discoverContent, loadDocument, groupByCategory, FOLDERS } from './services/content.js';
+import { extractCategories, applyFilters } from './services/filters.js';
 import { hydrateMedia } from './utils/markdown.js';
+import { getIconSvg } from './utils/icons.js';
 
 // DOM elements
 const cardsContainer = document.getElementById('cards');
@@ -19,10 +21,17 @@ const themeToggle = document.getElementById('theme-toggle');
 const fontUp = document.getElementById('font-up');
 const fontDown = document.getElementById('font-down');
 const handToggle = document.getElementById('hand-toggle');
+const filterCategoriesEl = document.getElementById('filter-categories');
+const sortToggle = document.getElementById('sort-toggle');
+const searchWrapper = document.getElementById('search-wrapper');
+const searchToggle = document.getElementById('search-toggle');
+const searchInput = document.getElementById('search-input');
 
 // State
 let allDocs = [];
 let currentDoc = null;
+let filterState = { category: null, search: '', sort: 'default' };
+let searchDebounceTimer = null;
 
 // Theme and font size
 function initTheme() {
@@ -95,6 +104,10 @@ initTheme();
 initFontSize();
 initHandedness();
 
+// Inject icons from registry
+sortToggle.innerHTML = getIconSvg('sort-descending', 18);
+searchToggle.innerHTML = getIconSvg('search', 18);
+
 /**
  * Create a card element for a document
  */
@@ -157,6 +170,113 @@ function buildCards(docs) {
       cardsContainer.appendChild(createCard(doc));
     }
   }
+
+  staggerCards();
+}
+
+function staggerCards() {
+  cardsContainer.querySelectorAll('.card').forEach((card, i) => {
+    card.style.setProperty('--i', i);
+  });
+}
+
+/**
+ * Render cards based on current filter state
+ */
+function renderFilteredCards() {
+  const filtered = applyFilters(allDocs, filterState);
+
+  if (filtered.length === 0) {
+    cardsContainer.innerHTML = '<p class="no-results">No matching content.</p>';
+    return;
+  }
+
+  if (filterState.sort === 'default') {
+    buildCards(filtered);
+  } else {
+    // Flat render — already sorted by applyFilters
+    cardsContainer.innerHTML = '';
+    for (const doc of filtered) {
+      cardsContainer.appendChild(createCard(doc));
+    }
+    staggerCards();
+  }
+}
+
+/**
+ * Build category pill buttons in the header
+ */
+function initFilterCategories() {
+  const categories = extractCategories(allDocs);
+  filterCategoriesEl.innerHTML = '';
+
+  // "All" button
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn active';
+  allBtn.textContent = 'all';
+  allBtn.addEventListener('click', () => {
+    filterState.category = null;
+    updateCategoryActive(null);
+    renderFilteredCards();
+  });
+  filterCategoriesEl.appendChild(allBtn);
+
+  for (const cat of categories) {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn';
+    btn.textContent = cat;
+    btn.dataset.category = cat;
+    btn.addEventListener('click', () => {
+      if (filterState.category === cat) {
+        // Deselect — back to all
+        filterState.category = null;
+        updateCategoryActive(null);
+      } else {
+        filterState.category = cat;
+        updateCategoryActive(cat);
+      }
+      renderFilteredCards();
+    });
+    filterCategoriesEl.appendChild(btn);
+  }
+}
+
+function updateCategoryActive(active) {
+  filterCategoriesEl.querySelectorAll('.filter-btn').forEach(btn => {
+    if (active === null) {
+      btn.classList.toggle('active', !btn.dataset.category);
+    } else {
+      btn.classList.toggle('active', btn.dataset.category === active);
+    }
+  });
+}
+
+const SORT_CYCLE = ['default', 'date', 'alpha'];
+
+function cycleSortOrder() {
+  const idx = SORT_CYCLE.indexOf(filterState.sort);
+  filterState.sort = SORT_CYCLE[(idx + 1) % SORT_CYCLE.length];
+  sortToggle.dataset.sort = filterState.sort;
+  renderFilteredCards();
+}
+
+function toggleSearch() {
+  const active = searchWrapper.classList.toggle('search-active');
+  if (active) {
+    searchInput.focus();
+  } else {
+    searchInput.value = '';
+    filterState.search = '';
+    renderFilteredCards();
+  }
+}
+
+function onSearchInput() {
+  clearTimeout(searchDebounceTimer);
+  searchDebounceTimer = setTimeout(() => {
+    filterState.search = searchInput.value;
+    renderFilteredCards();
+  }, 150);
 }
 
 /**
@@ -215,8 +335,26 @@ function closePanel() {
  * Handle keyboard events
  */
 function handleKeydown(e) {
-  if (e.key === 'Escape' && document.body.classList.contains('panel-open')) {
-    closePanel();
+  // Escape: close search first, then panel
+  if (e.key === 'Escape') {
+    if (searchWrapper.classList.contains('search-active')) {
+      toggleSearch();
+      return;
+    }
+    if (document.body.classList.contains('panel-open')) {
+      closePanel();
+    }
+    return;
+  }
+
+  // `/` opens search (unless already typing in an input)
+  if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    if (!searchWrapper.classList.contains('search-active')) {
+      toggleSearch();
+    } else {
+      searchInput.focus();
+    }
   }
 }
 
@@ -237,6 +375,7 @@ async function init() {
   }
 
   buildCards(allDocs);
+  initFilterCategories();
 
   // Set up event listeners
   panelClose.addEventListener('click', closePanel);
@@ -245,6 +384,9 @@ async function init() {
   fontUp.addEventListener('click', () => changeFontSize(2));
   fontDown.addEventListener('click', () => changeFontSize(-2));
   handToggle.addEventListener('click', toggleHandedness);
+  sortToggle.addEventListener('click', cycleSortOrder);
+  searchToggle.addEventListener('click', toggleSearch);
+  searchInput.addEventListener('input', onSearchInput);
 
   // Check for hash in URL and open that doc
   const hash = location.hash.slice(1);
