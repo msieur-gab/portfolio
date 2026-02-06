@@ -35,7 +35,7 @@ export class ProtoSandbox extends LitElement {
       width: 100%;
       border: none;
       border-radius: 8px;
-      background: inherit;
+      background: transparent;
     }
 
     .loading, .error {
@@ -132,7 +132,7 @@ export class ProtoSandbox extends LitElement {
 
     // Get computed CSS variables from document for theme bridging
     const computedStyle = getComputedStyle(document.documentElement);
-    const bgOverride = this.bg ? `body { background: ${this.bg}; }` : '';
+    const bgOverride = `body { background: ${this.bg || 'transparent'}; }`;
     const themeVars = `
       <style>
         :root {
@@ -174,6 +174,7 @@ export class ProtoSandbox extends LitElement {
           style="height: ${heightPx}"
           srcdoc=${this._prepareSrcdoc()}
           sandbox="allow-scripts"
+          allowtransparency="true"
           loading="lazy"
         ></iframe>
       </div>
