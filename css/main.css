@@ -349,23 +349,10 @@ body.panel-open .cards-grid {
 }
 
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
   padding: 1.5rem;
   cursor: pointer;
-  transition: border-color 0.15s, box-shadow 0.15s;
   animation: card-enter 0.25s ease-out both;
   animation-delay: calc(var(--i, 0) * 100ms);
-}
-
-.card:hover {
-  border-color: var(--color-text);
-}
-
-.card.active {
-  border-color: var(--color-text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .card-category {
