@@ -2,7 +2,7 @@
  * FlowDiagrams - SVG diagram engine
  *
  * Requires: dagre.js for layout (loaded from CDN)
- * Uses: --fc-* CSS custom properties for theming
+ * Uses: --chart-* CSS custom properties for theming
  * Hydrates: code.language-flow elements
  */
 
@@ -10,13 +10,13 @@ import { getIcon } from './icons.js';
 
 // ─── Theme (using CSS variables directly for live updates) ───
 const theme = () => ({
-  fg:         'var(--fc-fg, #1a1a1a)',
-  dim:        'var(--fc-dim, #999)',
-  bg:         'var(--fc-bg, #fafaf8)',
-  nodeFill:   'var(--fc-node-fill, #fff)',
-  nodeStroke: 'var(--fc-node-stroke, #bbb)',
-  edgeStroke: 'var(--fc-edge-stroke, #bbb)',
-  surface:    'var(--fc-surface, #fff)',
+  fg:         'var(--chart-fg, #1a1a1a)',
+  dim:        'var(--chart-dim, #999)',
+  bg:         'var(--chart-bg, #fafaf8)',
+  nodeFill:   'var(--chart-node-fill, #fff)',
+  nodeStroke: 'var(--chart-node-stroke, #bbb)',
+  edgeStroke: 'var(--chart-edge-stroke, #bbb)',
+  surface:    'var(--chart-surface, #fff)',
 });
 
 // ─── Config ────────────────────────────────────────────
@@ -64,7 +64,7 @@ function el(tag, attrs) {
 function txt(x, y, str, o = {}) {
   const t = el('text', {
     x, y, fill: o.fill || theme().dim,
-    'font-family': o.font || 'var(--fc-font, system-ui, sans-serif)',
+    'font-family': o.font || 'var(--chart-font, system-ui, sans-serif)',
     'font-size': o.size || C.fontSize,
     'text-anchor': o.anchor || 'middle',
     'dominant-baseline': o.baseline || 'central',
@@ -280,7 +280,7 @@ function renderSVG({ graph: g, meta }) {
   // Arrow marker
   const defs = el('defs');
   const marker = el('marker', {
-    id: 'fc-arrow', viewBox: '0 0 10 10',
+    id: 'chart-arrow', viewBox: '0 0 10 10',
     refX: 9, refY: 5,
     markerWidth: 7, markerHeight: 7,
     orient: 'auto-start-reverse',
@@ -293,7 +293,7 @@ function renderSVG({ graph: g, meta }) {
   if (meta.title) {
     const title = txt(C.margin, 16, meta.title, {
       anchor: 'start', size: 11, fill: t.fg,
-      font: 'var(--fc-mono, monospace)',
+      font: 'var(--chart-mono, monospace)',
     });
     title.style.opacity = '0.5';
     root.appendChild(title);
@@ -314,7 +314,7 @@ function renderSVG({ graph: g, meta }) {
         stroke: t.edgeStroke,
         'stroke-width': 1.25,
         'stroke-linecap': 'round',
-        'marker-end': 'url(#fc-arrow)',
+        'marker-end': 'url(#chart-arrow)',
       }));
     }
   }
@@ -428,7 +428,7 @@ export async function hydrate(root) {
     const content = code.textContent;
     const dir = code.dataset.dir || '';
     const wrap = document.createElement('div');
-    wrap.className = 'fc-diagram';
+    wrap.className = 'chart-diagram';
     wrap.style.cssText = 'display:flex;justify-content:center;align-items:center;width:100%;height:100%;';
 
     const pre = code.closest('pre');

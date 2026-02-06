@@ -1,5 +1,5 @@
 /**
- * FlowCharts - SVG chart rendering
+ * Charts — SVG chart rendering
  *
  * Supports: bar, hbar, line, area, stacked, pie, donut, scatter
  *
@@ -13,19 +13,19 @@
 
 // ─── Theme (CSS variables for live theme switching) ─────
 const pal = () => [
-  'var(--fc-p1, #c8a030)',
-  'var(--fc-p2, #a07828)',
-  'var(--fc-p3, #d4b450)',
-  'var(--fc-p4, #8a6020)',
-  'var(--fc-p5, #e0c868)',
-  'var(--fc-p6, #705018)',
+  'var(--chart-p1, #c8a030)',
+  'var(--chart-p2, #a07828)',
+  'var(--chart-p3, #d4b450)',
+  'var(--chart-p4, #8a6020)',
+  'var(--chart-p5, #e0c868)',
+  'var(--chart-p6, #705018)',
 ];
 const col = () => ({
-  fg: 'var(--fc-fg, #1a1a1a)',
-  dim: 'var(--fc-dim, #888)',
-  grid: 'var(--fc-grid, #e0e0de)',
-  bg: 'var(--fc-bg, #fafaf8)',
-  surface: 'var(--fc-surface, #fff)',
+  fg: 'var(--chart-fg, #1a1a1a)',
+  dim: 'var(--chart-dim, #888)',
+  grid: 'var(--chart-grid, #e0e0de)',
+  bg: 'var(--chart-bg, #fafaf8)',
+  surface: 'var(--chart-surface, #fff)',
 });
 
 // ─── SVG primitives ────────────────────────────────────
@@ -40,7 +40,7 @@ function el(tag, attrs) {
 function txt(x, y, str, o = {}) {
   const t = el('text', {
     x, y, fill: o.fill || col().dim,
-    'font-family': "var(--fc-mono, ui-monospace, 'SF Mono', monospace)",
+    'font-family': "var(--chart-mono, ui-monospace, 'SF Mono', monospace)",
     'font-size': o.size || 8,
     'text-anchor': o.anchor || 'middle',
     'dominant-baseline': o.baseline || 'auto',
@@ -50,7 +50,7 @@ function txt(x, y, str, o = {}) {
 }
 
 function tip(node, label) {
-  node.classList.add('fc-hoverable');
+  node.classList.add('chart-hoverable');
   node.dataset.tip = label;
   return node;
 }
@@ -517,7 +517,7 @@ export function hydrate(root) {
 
     const content = code.textContent;
     const wrap = document.createElement('div');
-    wrap.className = 'fc-chart';
+    wrap.className = 'chart-container';
     // Inline styles for shadow DOM compatibility
     wrap.style.cssText = 'display:flex;justify-content:center;align-items:center;width:100%;height:100%;';
     const pre = code.closest('pre');

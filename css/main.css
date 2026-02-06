@@ -22,36 +22,23 @@
   --scroll-sync-media-bg: var(--color-media-bg);
   --scroll-sync-caption-color: var(--color-muted);
 
-  /* Chart CSS variables (legacy) */
-  --chart-bg: #fafaf8;
+  /* Chart & diagram CSS variables */
+  --chart-p1: #c8a030;
+  --chart-p2: #a07828;
+  --chart-p3: #d4b450;
+  --chart-p4: #8a6020;
+  --chart-p5: #e0c868;
+  --chart-p6: #705018;
   --chart-fg: #1a1a1a;
-  --chart-grid: #ddd;
-  --chart-s1: #1a1a1a;
-  --chart-s2: #666;
-  --chart-s3: #999;
-  --chart-s4: #bbb;
-  --chart-s5: #444;
-  --chart-s6: #777;
-  --chart-s7: #aaa;
-  --chart-s8: #ccc;
-
-  /* FlowCharts & FlowDiagrams CSS variables */
-  --fc-p1: #c8a030;
-  --fc-p2: #a07828;
-  --fc-p3: #d4b450;
-  --fc-p4: #8a6020;
-  --fc-p5: #e0c868;
-  --fc-p6: #705018;
-  --fc-fg: #1a1a1a;
-  --fc-dim: #999;
-  --fc-grid: #e0e0de;
-  --fc-bg: #fafaf8;
-  --fc-surface: #fff;
-  --fc-node-fill: #fff;
-  --fc-node-stroke: #bbb;
-  --fc-edge-stroke: #bbb;
-  --fc-font: system-ui, -apple-system, sans-serif;
-  --fc-mono: ui-monospace, 'SF Mono', monospace;
+  --chart-dim: #999;
+  --chart-grid: #e0e0de;
+  --chart-bg: #fafaf8;
+  --chart-surface: #fff;
+  --chart-node-fill: #fff;
+  --chart-node-stroke: #bbb;
+  --chart-edge-stroke: #bbb;
+  --chart-font: system-ui, -apple-system, sans-serif;
+  --chart-mono: ui-monospace, 'SF Mono', monospace;
 }
 
 /* Dark theme */
@@ -63,55 +50,42 @@
   --color-surface: #242424;
   --color-media-bg: #2a2a2a;
 
-  /* Chart dark theme (legacy) */
-  --chart-bg: #151515;
-  --chart-fg: #e0e0e0;
-  --chart-grid: #2a2a2a;
-  --chart-s1: #e0e0e0;
-  --chart-s2: #aaa;
-  --chart-s3: #777;
-  --chart-s4: #555;
-  --chart-s5: #ccc;
-  --chart-s6: #999;
-  --chart-s7: #666;
-  --chart-s8: #444;
-
-  /* FlowCharts & FlowDiagrams dark theme */
-  --fc-p1: #e08098;
-  --fc-p2: #c06078;
-  --fc-p3: #f0a0b8;
-  --fc-p4: #a04860;
-  --fc-p5: #f4b8c8;
-  --fc-p6: #883850;
-  --fc-fg: #e4e4e7;
-  --fc-dim: #71717a;
-  --fc-grid: #2a2a2e;
-  --fc-bg: #0e0e10;
-  --fc-surface: #18181b;
-  --fc-node-fill: #1e1e22;
-  --fc-node-stroke: #555;
-  --fc-edge-stroke: #444;
+  /* Chart & diagram dark theme */
+  --chart-p1: #e08098;
+  --chart-p2: #c06078;
+  --chart-p3: #f0a0b8;
+  --chart-p4: #a04860;
+  --chart-p5: #f4b8c8;
+  --chart-p6: #883850;
+  --chart-fg: #e4e4e7;
+  --chart-dim: #71717a;
+  --chart-grid: #2a2a2e;
+  --chart-bg: #0e0e10;
+  --chart-surface: #18181b;
+  --chart-node-fill: #1e1e22;
+  --chart-node-stroke: #555;
+  --chart-edge-stroke: #444;
 }
 
-/* FlowCharts container and hover styles */
-.fc-chart {
+/* Chart container and hover styles */
+.chart-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
 }
 
-.fc-chart svg {
+.chart-container svg {
   max-width: 100%;
   height: auto;
 }
 
-.fc-hoverable {
+.chart-hoverable {
   cursor: pointer;
   transition: opacity 0.15s;
 }
 
-.fc-hoverable:hover {
+.chart-hoverable:hover {
   opacity: 1 !important;
 }
 
