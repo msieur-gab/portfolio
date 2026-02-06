@@ -374,8 +374,8 @@ async function init() {
     return;
   }
 
-  buildCards(allDocs);
   initFilterCategories();
+  renderFilteredCards();
 
   // Set up event listeners
   panelClose.addEventListener('click', closePanel);

@@ -65,22 +65,19 @@ export function applyFilters(docs, { category = null, search = '', sort = 'defau
 
   let result = docs.slice();
 
-  // 1. Visibility — published by default, unlock hidden via commands
-  result = result.filter(doc => {
-    const status = doc.frontmatter.status;
-
-    // Reveal a specific hidden doc by id
-    if (revealId && doc.id === revealId) return true;
-
-    // Show drafts command
-    if (showDrafts && status === 'draft') return true;
-
-    // Show archive command
-    if (showArchive && status === 'archive') return true;
-
-    // Default: show published and docs with no status
-    return !status || status === 'published';
-  });
+  // 1. Visibility — commands replace the view, not augment it
+  if (revealId) {
+    result = result.filter(doc => doc.id === revealId || doc.id.endsWith('-' + revealId));
+  } else if (showDrafts) {
+    result = result.filter(doc => doc.frontmatter.status === 'draft');
+  } else if (showArchive) {
+    result = result.filter(doc => doc.frontmatter.status === 'archive');
+  } else {
+    result = result.filter(doc => {
+      const status = doc.frontmatter.status;
+      return !status || status === 'published';
+    });
+  }
 
   // 2. Category filter
   if (category) {
