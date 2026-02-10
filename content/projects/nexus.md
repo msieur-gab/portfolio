@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/nexus-hero.jpg
 status: published
+featured: true
 category: project
 tags:
     - privacy

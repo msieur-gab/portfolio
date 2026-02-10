@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>thelost.directory — Desk Folders</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Desk surface — warm birch */
+    --desk: #c4a87c;
+    --desk-grain1: #b89b6f;
+    --desk-grain2: #ceb58a;
+    --desk-shadow: rgba(80, 55, 20, 0.15);
+
+    /* Manila folder palette */
+    --manila: #e8d5a3;
+    --manila-dark: #d9c48e;
+    --manila-edge: #c9b07a;
+    --folder-shadow: rgba(60, 40, 10, 0.2);
+
+    /* Tab accent colors — muted earth tones */
+    --tab-project: #c9a96e;
+    --tab-research: #a8b89a;
+    --tab-experiment: #9ab0c4;
+    --tab-about: #c4a0a0;
+
+    /* Text */
+    --ink: #2c2418;
+    --ink-muted: #6b5d4a;
+    --ink-faint: #9b8e7a;
+    --stamp-red: #a04030;
+
+    /* Typography */
+    --font-label: 'Special Elite', 'Courier New', monospace;
+    --font-body: 'Libre Franklin', system-ui, sans-serif;
+
+    --grain-opacity: 0.06;
+  }
+
+  [data-theme="dark"] {
+    /* Dark walnut desk */
+    --desk: #2a2119;
+    --desk-grain1: #231c14;
+    --desk-grain2: #332a1f;
+    --desk-shadow: rgba(0, 0, 0, 0.4);
+
+    --manila: #3d3428;
+    --manila-dark: #342c21;
+    --manila-edge: #2a231a;
+    --folder-shadow: rgba(0, 0, 0, 0.5);
+
+    --tab-project: #5c4d35;
+    --tab-research: #3d4a38;
+    --tab-experiment: #384550;
+    --tab-about: #4a3838;
+
+    --ink: #d4c8b0;
+    --ink-muted: #998b77;
+    --ink-faint: #6b6050;
+    --stamp-red: #8b4a3a;
+
+    --grain-opacity: 0.08;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--desk);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s;
+  }
+
+  /* Wood grain texture — CSS only */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      repeating-linear-gradient(
+        92deg,
+        transparent,
+        transparent 30px,
+        var(--desk-grain1) 30px,
+        var(--desk-grain1) 31px,
+        transparent 31px,
+        transparent 80px
+      ),
+      repeating-linear-gradient(
+        88deg,
+        transparent,
+        transparent 60px,
+        var(--desk-grain2) 60px,
+        var(--desk-grain2) 61.5px,
+        transparent 61.5px,
+        transparent 140px
+      );
+    opacity: 0.35;
+    transition: opacity 0.4s;
+  }
+
+  /* Paper grain noise via SVG filter */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+
+  /* Header bar */
+  .desk-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(to bottom, var(--desk) 60%, transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .desk-title {
+    font-family: var(--font-label);
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .desk-controls {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .desk-btn {
+    background: var(--manila-dark);
+    border: 1px solid var(--manila-edge);
+    color: var(--ink-muted);
+    font-family: var(--font-label);
+    font-size: 0.6875rem;
+    padding: 0.375rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .desk-btn:hover {
+    color: var(--ink);
+    background: var(--manila);
+  }
+
+  .desk-btn.active {
+    background: var(--manila);
+    color: var(--ink);
+    box-shadow: inset 0 1px 2px var(--desk-shadow);
+  }
+
+  /* =====================
+     GRID LAYOUT
+     ===================== */
+
+  .folder-grid {
+    position: relative;
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem 1.5rem;
+    padding: 1rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* =====================
+     SCATTERED LAYOUT
+     ===================== */
+
+  .folder-grid.scattered {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0;
+    max-width: 1200px;
+    padding: 2rem 2rem 6rem;
+  }
+
+  .folder-grid.scattered .folder {
+    margin: -0.5rem 0.25rem 1.5rem;
+  }
+
+  .folder-grid.scattered .folder:nth-child(1)  { transform: rotate(-2.5deg); z-index: 3; }
+  .folder-grid.scattered .folder:nth-child(2)  { transform: rotate(1.8deg); z-index: 5; margin-top: 1rem; }
+  .folder-grid.scattered .folder:nth-child(3)  { transform: rotate(-1.2deg); z-index: 4; margin-top: -0.5rem; }
+  .folder-grid.scattered .folder:nth-child(4)  { transform: rotate(2.5deg); z-index: 2; margin-top: 0.5rem; }
+  .folder-grid.scattered .folder:nth-child(5)  { transform: rotate(-1.8deg); z-index: 6; margin-top: -1rem; }
+  .folder-grid.scattered .folder:nth-child(6)  { transform: rotate(0.8deg); z-index: 1; margin-top: 0.25rem; }
+  .folder-grid.scattered .folder:nth-child(7)  { transform: rotate(-0.5deg); z-index: 7; margin-top: -0.75rem; }
+  .folder-grid.scattered .folder:nth-child(8)  { transform: rotate(1.5deg); z-index: 3; margin-top: 0.5rem; }
+  .folder-grid.scattered .folder:nth-child(9)  { transform: rotate(-2deg); z-index: 2; margin-top: -0.25rem; }
+
+  .folder-grid.scattered .folder:hover {
+    z-index: 50 !important;
+  }
+
+  /* =====================
+     THE FOLDER
+     ===================== */
+
+  .folder {
+    position: relative;
+    width: 100%;
+    max-width: 340px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, z-index 0s;
+    animation: folder-appear 0.4s ease-out both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+
+  @keyframes folder-appear {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .folder:hover {
+    transform: translateY(-6px) scale(1.01);
+    z-index: 20;
+  }
+
+  .folder-grid.scattered .folder:hover {
+    transform: translateY(-8px) rotate(0deg) scale(1.02) !important;
+  }
+
+  /* Tab — the folder tab sticking up */
+  .folder-tab {
+    position: relative;
+    display: inline-block;
+    background: var(--tab-color, var(--tab-project));
+    padding: 0.3rem 1rem 0.2rem;
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+    margin-left: 1.25rem;
+    border-radius: 3px 3px 0 0;
+    /* Paper texture on tab */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: 80px;
+    background-blend-mode: overlay;
+  }
+
+  /* Folder body */
+  .folder-body {
+    background: var(--manila);
+    border: 1px solid var(--manila-edge);
+    padding: 1.25rem 1.25rem 1rem;
+    min-height: 160px;
+    box-shadow:
+      0 1px 3px var(--folder-shadow),
+      0 4px 12px var(--folder-shadow);
+    position: relative;
+    /* Paper texture */
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 150px;
+    background-blend-mode: overlay;
+    transition: box-shadow 0.25s ease;
+  }
+
+  .folder:hover .folder-body {
+    box-shadow:
+      0 4px 8px var(--folder-shadow),
+      0 12px 32px var(--folder-shadow);
+  }
+
+  /* Folder inner edge — the flap illusion */
+  .folder-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      to right,
+      var(--manila-edge),
+      var(--manila-dark) 30%,
+      var(--manila-dark) 70%,
+      var(--manila-edge)
+    );
+    opacity: 0.5;
+  }
+
+  /* Category label — typed */
+  .folder-category {
+    font-family: var(--font-label);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    margin-bottom: 0.625rem;
+  }
+
+  /* Title — like a typed label on the folder */
+  .folder-title {
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    color: var(--ink);
+  }
+
+  /* Description — pencil notes */
+  .folder-desc {
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+    line-height: 1.5;
+    font-style: italic;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Tags as small stamps / sticker labels */
+  .folder-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.75rem;
+  }
+
+  .folder-tag {
+    font-family: var(--font-label);
+    font-size: 0.5625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--stamp-red);
+    border: 1px solid var(--stamp-red);
+    padding: 0.0625rem 0.375rem;
+    opacity: 0.7;
+    transform: rotate(-1deg);
+  }
+
+  .folder-tag:nth-child(even) {
+    transform: rotate(0.5deg);
+  }
+
+  /* Date stamp in corner */
+  .folder-date {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 1rem;
+    font-family: var(--font-label);
+    font-size: 0.5625rem;
+    color: var(--ink-faint);
+    opacity: 0.6;
+  }
+
+  /* Colored tab variants */
+  .folder[data-type="project"] { --tab-color: var(--tab-project); }
+  .folder[data-type="research"] { --tab-color: var(--tab-research); }
+  .folder[data-type="experiment"] { --tab-color: var(--tab-experiment); }
+  .folder[data-type="about"] { --tab-color: var(--tab-about); }
+
+  /* Slight paper clip on some folders */
+  .folder.has-clip::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: 24px;
+    width: 16px;
+    height: 42px;
+    border: 2px solid var(--ink-faint);
+    border-radius: 8px 8px 0 0;
+    border-bottom: none;
+    opacity: 0.3;
+    transform: rotate(5deg);
+    z-index: 2;
+  }
+
+  /* Coffee ring stain (very subtle, on one folder) */
+  .folder.has-stain .folder-body::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--ink-faint);
+    opacity: 0.07;
+  }
+
+  @media (max-width: 700px) {
+    .desk-header {
+      padding: 0.75rem 1rem;
+    }
+    .folder-grid {
+      grid-template-columns: 1fr;
+      padding: 1rem 1rem 3rem;
+      gap: 1.5rem;
+    }
+    .folder-grid.scattered {
+      padding: 1rem 1rem 3rem;
+    }
+    .folder-grid.scattered .folder {
+      transform: none !important;
+      margin: 0 0 1rem !important;
+      width: 100%;
+      max-width: none;
+    }
+    .folder {
+      max-width: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="desk-header">
+  <span class="desk-title">thelost.directory / desk</span>
+  <div class="desk-controls">
+    <button class="desk-btn active" id="btn-grid" onclick="setView('grid')">grid</button>
+    <button class="desk-btn" id="btn-scatter" onclick="setView('scatter')">scattered</button>
+    <button class="desk-btn" onclick="toggleTheme()">light / dark</button>
+  </div>
+</header>
+
+<div class="folder-grid" id="folder-grid">
+
+  <div class="folder" data-type="project" style="--i:0">
+    <div class="folder-tab">CYPHER</div>
+    <div class="folder-body">
+      <div class="folder-category">project / 2024</div>
+      <div class="folder-title">CYPHER</div>
+      <div class="folder-desc">A game where the architecture is the lesson. On teaching digital sovereignty through play.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">privacy</span>
+        <span class="folder-tag">education</span>
+        <span class="folder-tag">games</span>
+      </div>
+      <div class="folder-date">2024</div>
+    </div>
+  </div>
+
+  <div class="folder has-clip" data-type="project" style="--i:1">
+    <div class="folder-tab">Pebbble</div>
+    <div class="folder-body">
+      <div class="folder-category">project / 2025</div>
+      <div class="folder-title">Pebbble</div>
+      <div class="folder-desc">A stone that carries voices across borders, walls, and the silence of separation.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">nfc</span>
+        <span class="folder-tag">ipfs</span>
+        <span class="folder-tag">family</span>
+        <span class="folder-tag">voice</span>
+      </div>
+      <div class="folder-date">Jan 2025</div>
+    </div>
+  </div>
+
+  <div class="folder" data-type="project" style="--i:2">
+    <div class="folder-tab">The Wheel</div>
+    <div class="folder-body">
+      <div class="folder-category">project / 2024</div>
+      <div class="folder-title">The Wheel That Listens</div>
+      <div class="folder-desc">On designing for the hand that holds. A meditation wheel that responds to touch, tilt, and intention.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">meditation</span>
+        <span class="folder-tag">interaction</span>
+        <span class="folder-tag">biomechanics</span>
+      </div>
+      <div class="folder-date">2024</div>
+    </div>
+  </div>
+
+  <div class="folder has-stain" data-type="research" style="--i:3">
+    <div class="folder-tab">No Method</div>
+    <div class="folder-body">
+      <div class="folder-category">research / 2025</div>
+      <div class="folder-title">Design Has No Method</div>
+      <div class="folder-desc">On designing without a method. Why the best work happens when you stop following frameworks.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">philosophy</span>
+        <span class="folder-tag">methodology</span>
+      </div>
+      <div class="folder-date">2025</div>
+    </div>
+  </div>
+
+  <div class="folder" data-type="research" style="--i:4">
+    <div class="folder-tab">Wu Wei</div>
+    <div class="folder-body">
+      <div class="folder-category">research / 2025</div>
+      <div class="folder-title">What Wants to Happen</div>
+      <div class="folder-desc">On listening to the emerging. What Wu Wei teaches design about letting the right form find itself.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">wu-wei</span>
+        <span class="folder-tag">flow</span>
+        <span class="folder-tag">craft</span>
+      </div>
+      <div class="folder-date">2025</div>
+    </div>
+  </div>
+
+  <div class="folder has-clip" data-type="research" style="--i:5">
+    <div class="folder-tab">Lord of Screen</div>
+    <div class="folder-body">
+      <div class="folder-category">research / 2025</div>
+      <div class="folder-title">The Lord of the Screen</div>
+      <div class="folder-desc">On the silent deal we made with algorithms. Reclaiming attention from the attention economy.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">algorithms</span>
+        <span class="folder-tag">attention</span>
+        <span class="folder-tag">ethics</span>
+      </div>
+      <div class="folder-date">2025</div>
+    </div>
+  </div>
+
+  <div class="folder" data-type="experiment" style="--i:6">
+    <div class="folder-tab">Scroll Sync</div>
+    <div class="folder-body">
+      <div class="folder-category">experiment / 2025</div>
+      <div class="folder-title">Scroll Sync</div>
+      <div class="folder-desc">A scroll-driven component for paired reading. Content flows, media follows.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">web-components</span>
+        <span class="folder-tag">scroll</span>
+      </div>
+      <div class="folder-date">2025</div>
+    </div>
+  </div>
+
+  <div class="folder" data-type="experiment" style="--i:7">
+    <div class="folder-tab">Penumbra</div>
+    <div class="folder-body">
+      <div class="folder-category">experiment</div>
+      <div class="folder-title">Penumbra</div>
+      <div class="folder-desc">Shadow and light at the edge of interaction. Exploring peripheral awareness in interface design.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">perception</span>
+        <span class="folder-tag">interface</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="folder" data-type="experiment" style="--i:8">
+    <div class="folder-tab">Charts</div>
+    <div class="folder-body">
+      <div class="folder-category">experiment</div>
+      <div class="folder-title">Charts & Graphs</div>
+      <div class="folder-desc">SVG chart and flow diagram rendering from markdown code blocks.</div>
+      <div class="folder-tags">
+        <span class="folder-tag">svg</span>
+        <span class="folder-tag">data-viz</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? '' : 'dark';
+  }
+
+  function setView(mode) {
+    const grid = document.getElementById('folder-grid');
+    const btnGrid = document.getElementById('btn-grid');
+    const btnScatter = document.getElementById('btn-scatter');
+
+    if (mode === 'scatter') {
+      grid.classList.add('scattered');
+      btnScatter.classList.add('active');
+      btnGrid.classList.remove('active');
+    } else {
+      grid.classList.remove('scattered');
+      btnGrid.classList.add('active');
+      btnScatter.classList.remove('active');
+    }
+  }
+</script>
+
+</body>
+</html>
