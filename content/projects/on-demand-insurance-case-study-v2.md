@@ -1,7 +1,21 @@
 ---
 title: "On-Demand Insurance: Insure What You Carry, Not What We Sell"
 description: "How a strategic pitch about the API economy became a working product concept that anticipated the market by seven years."
-category: case-study
+date:
+    published: 2017-06-01
+status: published
+category: project
+tags:
+    - insurance
+    - innovation
+    - API-economy
+    - strategy
+    - prototyping
+    - Allianz
+project:
+    status: completed
+    timeline:
+        start: 2017
 ---
 
 # On-Demand Insurance

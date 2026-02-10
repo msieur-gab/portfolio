@@ -75,7 +75,7 @@ export function applyFilters(docs, { category = null, search = '', sort = 'defau
   } else {
     result = result.filter(doc => {
       const status = doc.frontmatter.status;
-      return !status || status === 'published';
+      return status === 'published';
     });
   }
 

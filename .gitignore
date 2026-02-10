@@ -1,3 +1,8 @@
 # Prototype working directories
 chart/
 flow/
+
+# SQLite database
+subscribers.db
+subscribers.db-wal
+subscribers.db-shm

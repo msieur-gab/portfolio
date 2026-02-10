@@ -388,11 +388,13 @@ async function init() {
   searchToggle.addEventListener('click', toggleSearch);
   searchInput.addEventListener('input', onSearchInput);
 
-  // Check for hash in URL and open that doc
-  const hash = location.hash.slice(1);
+  // Check for hash or ?doc= param in URL and open that doc
+  const docParam = new URLSearchParams(location.search).get('doc');
+  const hash = docParam || location.hash.slice(1);
   if (hash) {
-    const doc = allDocs.find(d => d.id === hash);
+    const doc = allDocs.find(d => d.id === hash || d.id.endsWith('-' + hash));
     if (doc) {
+      if (docParam) history.replaceState(null, '', location.pathname + '#' + doc.id);
       openPanel(doc);
     }
   }

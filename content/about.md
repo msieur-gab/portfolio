@@ -1,6 +1,7 @@
 ---
 title: About
 description: Design philosophy and practice
+status: draft
 ---
 
 # Gabos
