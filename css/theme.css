@@ -34,7 +34,6 @@
   --push-80: color-mix(in oklch, var(--color-bg), var(--color-text) 80%);
 
   /* ─── Effects ────────────────────────────────────────────────────────────── */
-  --color-deleted-fx: color-mix(in oklch, var(--color-text), var(--color-bg) 30%);
   --marked-fx:  url(pen-brushes-8.svg);
   --deleted-fx: url(pen-brushes-9.svg);
 

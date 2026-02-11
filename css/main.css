@@ -138,12 +138,12 @@ body {
 .filter-btn {
   background: none;
   border: 1px solid var(--push-10);
-  color: var(--push-50);
+  color: var(--push-80);
   padding: 0.25rem 0.625rem;
   border-radius: 12px;
   cursor: pointer;
   font-family: inherit;
-  font-size: 0.6875rem;
+  font-size: 0.8rem;
   font-weight: 500;
   white-space: nowrap;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
@@ -236,7 +236,7 @@ body {
 
 .control-btn:hover {
   color: var(--color-text);
-  background: var(--push-10);
+  background: var(--lift-40);
 }
 
 
@@ -597,7 +597,7 @@ article del {
   mask-image: var(--deleted-fx);
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
-  background-color: var(--color-deleted-fx);
+  background-color: var(--color-text);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding: .2rem .5rem;
