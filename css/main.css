@@ -199,7 +199,7 @@ body {
 
 /* No results */
 .no-results {
-  grid-column: 1 / -1;
+  column-span: all;
   text-align: center;
   padding: 4rem 2rem;
   color: var(--push-50);
@@ -320,10 +320,8 @@ body.panel-open .section-contact {
 /* Cards grid */
 .cards-grid {
   flex: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(max(300px, calc((100% - 4 * 1.25rem) / 5)), 1fr));
-  gap: 1.25rem;
-  align-content: start;
+  columns: 5 300px;
+  column-gap: 1.25rem;
   transition: margin 0.3s ease;
 }
 
@@ -348,6 +346,8 @@ body.panel-open .cards-grid {
 .card {
   padding: 1.5rem;
   cursor: pointer;
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
   animation: card-enter 0.25s ease-out both;
   animation-delay: calc(var(--i, 0) * 100ms);
 }
@@ -710,8 +710,7 @@ article figure[data-media] pre {
   }
 
   .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    columns: 1;
   }
 
   body.panel-open .cards-grid,

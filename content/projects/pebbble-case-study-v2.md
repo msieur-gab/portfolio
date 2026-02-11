@@ -4,6 +4,7 @@ description: "Designing for the families that technology forgot — NFC, IPFS, a
 date:
     published: 2024-06-01
 status: published
+series: 24
 category: project
 tags:
     - privacy

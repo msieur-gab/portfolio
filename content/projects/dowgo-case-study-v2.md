@@ -4,6 +4,7 @@ description: "How two weeks of dialogue, prototyping, and restraint turned a due
 date:
     published: 2024-01-15
 status: published
+series: 81
 category: project
 tags:
     - UX

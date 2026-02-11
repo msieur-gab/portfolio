@@ -2,6 +2,7 @@
 title: Penumbra
 description: "An e-ink watch concept exploring time as presence rather than position."
 status: published
+series: 52
 featured: true
 category: experiments
 ---

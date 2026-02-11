@@ -4,6 +4,7 @@ description: "How a strategic pitch about the API economy became a working produ
 date:
     published: 2017-06-01
 status: published
+series: 91
 category: project
 tags:
     - insurance

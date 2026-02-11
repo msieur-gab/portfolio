@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/cypher-hero.jpg
 status: published
+series: 22
 category: project
 tags:
     - privacy

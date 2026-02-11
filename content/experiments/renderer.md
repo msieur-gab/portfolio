@@ -3,6 +3,7 @@ title: "Renderer Test"
 description: "Exercises every rendering path — images, charts, flows, lists, code, prototypes"
 category: experiments
 status: published
+series: 54
 ---
 
 # Renderer Test

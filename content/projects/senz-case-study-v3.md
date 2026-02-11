@@ -4,6 +4,7 @@ description: "How an innovation lab inside a Fortune 500 insurer built the tool 
 date:
     published: 2018-09-01
 status: published
+series: 41
 featured: true
 category: project
 tags:

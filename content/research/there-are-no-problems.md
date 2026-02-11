@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/no-problems-hero.jpg
 status: published
+series: 12
 category: reflexion
 tags:
     - design-philosophy

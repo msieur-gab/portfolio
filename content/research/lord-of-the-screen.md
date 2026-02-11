@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/lord-screen.jpg
 status: published
+series: 14
 category: reflexion
 tags:
     - algorithms

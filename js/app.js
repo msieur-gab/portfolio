@@ -32,6 +32,7 @@ let allDocs = [];
 let currentDoc = null;
 let filterState = { category: null, search: '', sort: 'default' };
 let searchDebounceTimer = null;
+let isInitialLoad = true;
 
 // Theme and font size
 function initTheme() {
@@ -111,16 +112,19 @@ searchToggle.innerHTML = getIconSvg('search', 18);
 /**
  * Create a card element for a document
  */
-function createCard(doc, index) {
+function createCard(doc) {
   const card = document.createElement('article');
   card.className = 'card';
   card.dataset.id = doc.id;
 
-  // Series number
-  const number = document.createElement('h1');
-  number.className = 'series-number';
-  number.textContent = String(index).padStart(2, '0');
-  card.appendChild(number);
+  // Series number (from frontmatter)
+  const series = doc.frontmatter.series;
+  if (series) {
+    const number = document.createElement('h1');
+    number.className = 'series-number';
+    number.textContent = String(series).padStart(2, '0');
+    card.appendChild(number);
+  }
 
   // Title
   const title = document.createElement('h2');
@@ -198,13 +202,12 @@ function buildCards(docs) {
   const grouped = groupByCategory(docs);
 
   // Render in folder order, then 'other'
-  let idx = 1;
   for (const folder of [...FOLDERS, 'other']) {
     const items = grouped[folder];
     if (!items?.length) continue;
 
     for (const doc of items) {
-      cardsContainer.appendChild(createCard(doc, idx++));
+      cardsContainer.appendChild(createCard(doc));
     }
   }
 
@@ -220,11 +223,19 @@ function staggerCards() {
 /**
  * Render cards based on current filter state
  */
+function scrollToGrid() {
+  if (isInitialLoad) return;
+  const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height'));
+  const gridTop = cardsContainer.getBoundingClientRect().top + window.scrollY - headerHeight;
+  window.scrollTo({ top: gridTop, behavior: 'smooth' });
+}
+
 function renderFilteredCards() {
   const filtered = applyFilters(allDocs, filterState);
 
   if (filtered.length === 0) {
     cardsContainer.innerHTML = '<p class="no-results">No matching content.</p>';
+    scrollToGrid();
     return;
   }
 
@@ -234,10 +245,12 @@ function renderFilteredCards() {
     // Flat render — already sorted by applyFilters
     cardsContainer.innerHTML = '';
     filtered.forEach((doc, i) => {
-      cardsContainer.appendChild(createCard(doc, i + 1));
+      cardsContainer.appendChild(createCard(doc));
     });
     staggerCards();
   }
+
+  scrollToGrid();
 }
 
 /**
@@ -366,6 +379,9 @@ function closePanel() {
 
   // Update URL
   history.replaceState(null, '', window.location.pathname);
+
+  // Return to cards grid
+  scrollToGrid();
 }
 
 /**
@@ -413,6 +429,7 @@ async function init() {
 
   initFilterCategories();
   renderFilteredCards();
+  isInitialLoad = false;
 
   // Set up event listeners
   panelClose.addEventListener('click', closePanel);

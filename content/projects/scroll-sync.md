@@ -6,6 +6,7 @@ date:
     updated: 2025-01-27
 thumbnail: /content/media/scroll-sync-hero.jpg
 status: published
+series: 51
 featured: true
 category: project
 subcategories:

@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/what-wants.jpg
 status: published
+series: 13
 category: reflexion
 tags:
     - design-philosophy

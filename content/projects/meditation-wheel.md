@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/wheel-hero.jpg
 status: published
+series: 01
 category: project
 tags:
     - meditation

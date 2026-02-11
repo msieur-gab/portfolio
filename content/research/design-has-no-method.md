@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/water-stone.jpg
 status: published
+series: 11
 category: reflexion
 tags:
     - design-philosophy

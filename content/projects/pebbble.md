@@ -5,6 +5,7 @@ date:
     published: 2025-01-27
 thumbnail: /content/media/pebbles.jpg
 status: published
+series: 23
 category: project
 tags:
     - privacy
