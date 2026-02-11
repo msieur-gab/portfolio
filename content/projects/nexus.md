@@ -1,6 +1,6 @@
 ---
 title: Nexus
-description: "An alternate reality game where you get hacked first, then learn why it matters. On teaching sovereignty through consequence before Europe changes everything."
+description: "An alternate reality game where you get hacked first, then learn why it matters. By 2026, every European citizen gets a digital identity wallet. Most will not understand what that means until it is already their reality. Nexus teaches sovereignty through consequence — not slides, not warnings, but lived experience in a controlled breach."
 date:
     published: 2025-01-27
 thumbnail: /content/media/nexus-hero.jpg

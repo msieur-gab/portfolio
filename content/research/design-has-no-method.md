@@ -1,6 +1,6 @@
 ---
 title: Design Has No Method
-description: "Against frameworks. For observation, empathy, and the discipline of flowing with context rather than imposing upon it."
+description: "Against frameworks. There is an industry built on selling design methodologies — double diamonds, sprint templates, empathy packaged into persona cards. Each problem has its own grain. Each context demands its own attention. What works is simpler and harder: observation, curiosity, empathy, and the patience to let solutions emerge rather than forcing them into existence."
 date:
     published: 2025-01-27
 thumbnail: /content/media/water-stone.jpg

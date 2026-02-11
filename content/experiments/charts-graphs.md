@@ -2,6 +2,7 @@
 title: "Charts & Graphs"
 description: "Markdown-embedded data visualizations and flow diagrams - demonstrated with Pebbble project data"
 category: experiments
+status: published
 ---
 
 # Charts & Graphs in Markdown

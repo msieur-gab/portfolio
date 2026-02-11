@@ -2,6 +2,7 @@
 title: "Renderer Test"
 description: "Exercises every rendering path — images, charts, flows, lists, code, prototypes"
 category: experiments
+status: published
 ---
 
 # Renderer Test

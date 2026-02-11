@@ -1,9 +1,9 @@
 ---
 title: Pebbble
-description: "A stone that carries voices across borders, walls, and the silence of separation."
+description: "A stone that carries voices across borders, walls, and the silence of separation. NFC-enabled, battery-free, censorship-resistant. A parent records a message, the stone holds it. A child taps it, the voice plays. Built on IPFS and client-side encryption for the cases no authority can quantify — when distance is not chosen but stolen."
 date:
     published: 2025-01-27
-thumbnail: /content/media/pebbble-hero.jpg
+thumbnail: /content/media/pebbles.jpg
 status: published
 category: project
 tags:
