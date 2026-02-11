@@ -1,64 +1,60 @@
 /* ─── Theme System ────────────────────────────────────────────────────────── */
 /*                                                                             */
-/*  Four seeds define everything: --bg, --text, --accent, --away               */
+/*  Four seeds define everything: --color-bg, --color-text, --accent, --away   */
 /*  All other colors are derived via color-mix() in oklch space.               */
 /*  Change the seeds, the whole UI follows.                                    */
 /*                                                                             */
 /*  --away is the extreme: white on light, black on dark.                      */
-/*  --lift-* steps toward it (away from text).                                 */
-/*  --depth-* steps toward text (into the content).                            */
+/*  --lift-* steps toward it (lighter, softer, less contrast).                 */
+/*  --push-* steps toward text (heavier, more contrast).                       */
 /*                                                                             */
 /* ─────────────────────────────────────────────────────────────────────────── */
 
 :root {
   /* ─── Seeds ──────────────────────────────────────────────────────────────── */
-  --bg:     #e0e0e0;
-  --text:   #454545;
-  --accent: #ff5722;
-  --away:   white;
+  --color-bg:   #e0e0e0;
+  --color-text: #454545;
+  --accent:     #ff5722;
+  --away:       white;
 
   /* ─── Lift Scale (bg → away) ─────────────────────────────────────────────── */
-  --lift-10: color-mix(in oklch, var(--bg), var(--away) 10%);
-  --lift-20: color-mix(in oklch, var(--bg), var(--away) 20%);
-  --lift-40: color-mix(in oklch, var(--bg), var(--away) 40%);
-  --lift-50: color-mix(in oklch, var(--bg), var(--away) 50%);
-  --lift-60: color-mix(in oklch, var(--bg), var(--away) 60%);
-  --lift-80: color-mix(in oklch, var(--bg), var(--away) 80%);
+  --lift-10: color-mix(in oklch, var(--color-bg), var(--away) 10%);
+  --lift-20: color-mix(in oklch, var(--color-bg), var(--away) 20%);
+  --lift-40: color-mix(in oklch, var(--color-bg), var(--away) 40%);
+  --lift-50: color-mix(in oklch, var(--color-bg), var(--away) 50%);
+  --lift-60: color-mix(in oklch, var(--color-bg), var(--away) 60%);
+  --lift-80: color-mix(in oklch, var(--color-bg), var(--away) 80%);
 
-  /* ─── Depth Scale (bg → text) ────────────────────────────────────────────── */
-  --depth-10: color-mix(in oklch, var(--bg), var(--text) 10%);
-  --depth-20: color-mix(in oklch, var(--bg), var(--text) 20%);
-  --depth-40: color-mix(in oklch, var(--bg), var(--text) 40%);
-  --depth-50: color-mix(in oklch, var(--bg), var(--text) 50%);
-  --depth-60: color-mix(in oklch, var(--bg), var(--text) 60%);
-  --depth-80: color-mix(in oklch, var(--bg), var(--text) 80%);
-
-  /* ─── Semantic Aliases ───────────────────────────────────────────────────── */
-  --color-bg:   var(--bg);
-  --color-text: var(--text);
+  /* ─── Push Scale (bg → text) ─────────────────────────────────────────────── */
+  --push-10: color-mix(in oklch, var(--color-bg), var(--color-text) 10%);
+  --push-20: color-mix(in oklch, var(--color-bg), var(--color-text) 20%);
+  --push-40: color-mix(in oklch, var(--color-bg), var(--color-text) 40%);
+  --push-50: color-mix(in oklch, var(--color-bg), var(--color-text) 50%);
+  --push-60: color-mix(in oklch, var(--color-bg), var(--color-text) 60%);
+  --push-80: color-mix(in oklch, var(--color-bg), var(--color-text) 80%);
 
   /* ─── Effects ────────────────────────────────────────────────────────────── */
-  --color-deleted-fx: color-mix(in oklch, var(--text), var(--bg) 30%);
+  --color-deleted-fx: color-mix(in oklch, var(--color-text), var(--color-bg) 30%);
   --marked-fx:  url(pen-brushes-8.svg);
   --deleted-fx: url(pen-brushes-9.svg);
 
   /* ─── Chart Palette (accent stepped toward text for contrast) ──────────── */
   --chart-p1: var(--accent);
-  --chart-p2: color-mix(in oklch, var(--accent), var(--text) 15%);
-  --chart-p3: color-mix(in oklch, var(--accent), var(--text) 30%);
-  --chart-p4: color-mix(in oklch, var(--accent), var(--text) 45%);
-  --chart-p5: color-mix(in oklch, var(--accent), var(--text) 60%);
-  --chart-p6: color-mix(in oklch, var(--accent), var(--text) 75%);
+  --chart-p2: color-mix(in oklch, var(--accent), var(--color-text) 15%);
+  --chart-p3: color-mix(in oklch, var(--accent), var(--color-text) 30%);
+  --chart-p4: color-mix(in oklch, var(--accent), var(--color-text) 45%);
+  --chart-p5: color-mix(in oklch, var(--accent), var(--color-text) 60%);
+  --chart-p6: color-mix(in oklch, var(--accent), var(--color-text) 75%);
 
   /* ─── Chart Structural ───────────────────────────────────────────────────── */
   --chart-fg:          var(--color-text);
-  --chart-dim:         var(--depth-50);
-  --chart-grid:        var(--depth-10);
+  --chart-dim:         var(--push-50);
+  --chart-grid:        var(--push-10);
   --chart-bg:          var(--color-bg);
   --chart-surface:     var(--lift-10);
   --chart-node-fill:   var(--lift-10);
-  --chart-node-stroke: var(--depth-10);
-  --chart-edge-stroke: var(--depth-10);
+  --chart-node-stroke: var(--push-10);
+  --chart-edge-stroke: var(--push-10);
   --chart-font:        var(--font-sans);
   --chart-mono:        var(--font-mono);
 
@@ -77,10 +73,10 @@
 /*  Only the four seeds change. Everything else recalculates.                  */
 
 [data-theme="dark"] {
-  --bg:     #393939;
-  --text:   #e8e8e8;
-  --accent: #ffc107;
-  --away:   black;
+  --color-bg:   #393939;
+  --color-text: #e8e8e8;
+  --accent:     #ffc107;
+  --away:       black;
 }
 
 /* ─── Dark Mode Image Treatment ───────────────────────────────────────────── */

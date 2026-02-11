@@ -43,7 +43,7 @@ export class ProtoSandbox extends LitElement {
       align-items: center;
       justify-content: center;
       min-height: 200px;
-      color: var(--depth-50, #666);
+      color: var(--push-50, #666);
       font-family: var(--font-sans, system-ui);
       font-size: 0.875rem;
     }
@@ -58,7 +58,7 @@ export class ProtoSandbox extends LitElement {
       right: 8px;
       font-size: 0.625rem;
       font-family: var(--font-mono, monospace);
-      color: var(--depth-50, #888);
+      color: var(--push-50, #888);
       background: var(--lift-10, rgba(255,255,255,0.9));
       padding: 2px 6px;
       border-radius: 3px;
@@ -138,7 +138,7 @@ export class ProtoSandbox extends LitElement {
         :root {
           --color-bg: ${computedStyle.getPropertyValue('--color-bg').trim() || '#ffffff'};
           --color-text: ${computedStyle.getPropertyValue('--color-text').trim() || '#1a1a1a'};
-          --depth-50: ${computedStyle.getPropertyValue('--depth-50').trim() || '#666666'};
+          --push-50: ${computedStyle.getPropertyValue('--push-50').trim() || '#666666'};
           --font-sans: ${computedStyle.getPropertyValue('--font-sans').trim() || 'system-ui'};
           --font-mono: ${computedStyle.getPropertyValue('--font-mono').trim() || 'monospace'};
         }

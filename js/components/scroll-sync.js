@@ -93,7 +93,7 @@ export class ScrollSync extends LitElement {
     .media-slot figcaption {
       margin-top: 16px;
       font-size: 0.875rem;
-      color: var(--depth-50, #666);
+      color: var(--push-50, #666);
     }
 
     /* Quote figures */
