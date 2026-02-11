@@ -111,41 +111,77 @@ searchToggle.innerHTML = getIconSvg('search', 18);
 /**
  * Create a card element for a document
  */
-function createCard(doc) {
+function createCard(doc, index) {
   const card = document.createElement('article');
   card.className = 'card';
   card.dataset.id = doc.id;
 
-  const category = document.createElement('div');
-  category.className = 'card-category';
-  category.textContent = doc.category || 'other';
+  // Series number
+  const number = document.createElement('h1');
+  number.className = 'series-number';
+  number.textContent = String(index).padStart(2, '0');
+  card.appendChild(number);
 
+  // Title
   const title = document.createElement('h2');
   title.className = 'card-title';
   title.textContent = doc.label;
-
-  const description = document.createElement('p');
-  description.className = 'card-description';
-  description.textContent = doc.frontmatter.description || '';
-
-  card.appendChild(category);
   card.appendChild(title);
-  if (doc.frontmatter.description) {
-    card.appendChild(description);
-  }
 
+  // Tags
   const tags = doc.frontmatter.tags;
   if (tags && tags.length) {
-    const tagList = document.createElement('div');
+    const tagList = document.createElement('ul');
     tagList.className = 'card-tags';
+    tagList.setAttribute('aria-label', 'Project tags');
     for (const tag of tags.slice(0, 5)) {
-      const span = document.createElement('span');
-      span.className = 'card-tag';
-      span.textContent = tag;
-      tagList.appendChild(span);
+      const li = document.createElement('li');
+      li.className = 'card-tag';
+      li.textContent = tag;
+      tagList.appendChild(li);
     }
     card.appendChild(tagList);
   }
+
+  // Cover image
+  const thumbnail = doc.frontmatter.thumbnail;
+  if (thumbnail) {
+    const img = document.createElement('img');
+    img.className = 'card-cover';
+    img.src = thumbnail;
+    img.alt = doc.label;
+    img.loading = 'lazy';
+    img.onerror = () => img.remove();
+    card.appendChild(img);
+  }
+
+  // Description
+  if (doc.frontmatter.description) {
+    const description = document.createElement('p');
+    description.className = 'card-description';
+    description.textContent = doc.frontmatter.description;
+    card.appendChild(description);
+  }
+
+  // Footer
+  const footer = document.createElement('footer');
+  footer.className = 'card-footer';
+
+  const cat = document.createElement('span');
+  cat.className = 'card-category';
+  cat.textContent = doc.category || 'other';
+  footer.appendChild(cat);
+
+  const pubDate = doc.frontmatter.date?.published;
+  if (pubDate) {
+    const time = document.createElement('time');
+    time.className = 'card-date';
+    time.setAttribute('datetime', pubDate);
+    time.textContent = new Date(pubDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    footer.appendChild(time);
+  }
+
+  card.appendChild(footer);
 
   card.addEventListener('click', () => openPanel(doc));
 
@@ -162,12 +198,13 @@ function buildCards(docs) {
   const grouped = groupByCategory(docs);
 
   // Render in folder order, then 'other'
+  let idx = 1;
   for (const folder of [...FOLDERS, 'other']) {
     const items = grouped[folder];
     if (!items?.length) continue;
 
     for (const doc of items) {
-      cardsContainer.appendChild(createCard(doc));
+      cardsContainer.appendChild(createCard(doc, idx++));
     }
   }
 
@@ -196,9 +233,9 @@ function renderFilteredCards() {
   } else {
     // Flat render — already sorted by applyFilters
     cardsContainer.innerHTML = '';
-    for (const doc of filtered) {
-      cardsContainer.appendChild(createCard(doc));
-    }
+    filtered.forEach((doc, i) => {
+      cardsContainer.appendChild(createCard(doc, i + 1));
+    });
     staggerCards();
   }
 }
