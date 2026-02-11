@@ -320,24 +320,23 @@ body.panel-open .section-contact {
 /* Cards grid */
 .cards-grid {
   flex: 1;
-  padding: 1rem 2rem 2rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(max(300px, calc((100% - 4 * 1.25rem) / 5)), 1fr));
   gap: 1.25rem;
   align-content: start;
-  transition: padding 0.3s ease;
+  transition: margin 0.3s ease;
 }
 
-/* When panel is open, add padding to prevent overlap */
+/* When panel is open, shrink grid to remaining space */
 /* Default (right-handed): panel on left, cards push right */
 body.panel-open .cards-grid {
-  padding-left: calc(var(--panel-width) + 2rem);
+  margin-left: var(--panel-width);
 }
 
 /* Left-handed: panel on right, cards push left */
 [data-handed="left"] body.panel-open .cards-grid {
-  padding-left: 2rem;
-  padding-right: calc(var(--panel-width) + 2rem);
+  margin-left: 0;
+  margin-right: var(--panel-width);
 }
 
 /* Card */
@@ -711,15 +710,14 @@ article figure[data-media] pre {
   }
 
   .cards-grid {
-    padding: 1rem;
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 
   body.panel-open .cards-grid,
   [data-handed="left"] body.panel-open .cards-grid {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    margin-left: 0;
+    margin-right: 0;
   }
 
   .panel {
