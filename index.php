@@ -18,7 +18,7 @@
 
 define('SITE_TITLE', '../');
 define('SITE_URL', rtrim($_ENV['SITE_URL'] ?? 'http://localhost:8000', '/'));
-define('SITE_DESCRIPTION', 'Design, technology, and experiments');
+define('SITE_DESCRIPTION', 'the lost.directory — the work of Gabriel Baude. Systems designer and builder. Twenty years across Fortune 500s and startups. Projects, experiments, and articles on what should matter before the next big thing.');
 define('ADMIN_PASSWORD', $_ENV['ADMIN_PASSWORD'] ?? 'changeme');
 define('CONTENT_DIR', __DIR__ . '/content');
 define('INDEX_HTML', __DIR__ . '/index.html');
@@ -245,7 +245,7 @@ if ($path === '/feed.xml' || $path === '/rss') {
 
     foreach ($items as $item) {
         $slug = slug_from_path($item['file']);
-        $url = SITE_URL . '/#' . $slug;
+        $url = SITE_URL . '/?doc=' . $slug;
         $pubDate = $item['date'] ? date('c', strtotime($item['date'])) : date('c');
 
         echo "  <entry>\n";

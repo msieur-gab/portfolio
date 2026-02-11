@@ -98,8 +98,9 @@ export class ScrollSync extends LitElement {
 
     /* Quote figures */
     .media-slot blockquote {
+      font-family: var(--font-serif);
       font-size: 1.5rem;
-      font-style: italic;
+      font-style: normal;
       line-height: 1.6;
       max-width: 50ch;
       text-align: center;
