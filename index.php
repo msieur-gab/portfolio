@@ -47,7 +47,7 @@ if ($path === '/feed.xml' || $path === '/rss') {
     handle_feed($cfg);
 }
 
-if (str_starts_with($path, '/admin')) {
+if ($path === '/admin' || str_starts_with($path, '/admin/')) {
     require __DIR__ . '/php/admin.php';
     handle_admin($path, $method, $cfg);
 }
@@ -58,6 +58,14 @@ if ($path !== '/' && $path !== '') {
     $filePath = __DIR__ . $path;
 
     if (is_file($filePath)) {
+        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+
+        // Never serve PHP source or hidden files
+        if ($ext === 'php' || str_starts_with(basename($filePath), '.')) {
+            http_response_code(403);
+            exit;
+        }
+
         $mimes = [
             'js'   => 'application/javascript', 'mjs'  => 'application/javascript',
             'css'  => 'text/css',               'svg'  => 'image/svg+xml',
@@ -69,9 +77,7 @@ if ($path !== '/' && $path !== '') {
             'json' => 'application/json',        'md'   => 'text/markdown',
             'xml'  => 'application/xml',         'txt'  => 'text/plain',
             'html' => 'text/html',               'map'  => 'application/json',
-            'php'  => 'text/plain',
         ];
-        $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
         if (isset($mimes[$ext])) {
             header('Content-Type: ' . $mimes[$ext]);
         }

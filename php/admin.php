@@ -100,8 +100,11 @@ function handle_admin(string $path, string $method, array $cfg): never {
         $target = $_POST['target'] ?? '';
         $filename = basename($_POST['filename'] ?? '');
 
-        if (isset($uploadTargets[$target]) && $filename) {
-            $filepath = $uploadTargets[$target] . '/' . $filename;
+        // Resolve target directory (_root = content root)
+        $targetDir = $target === '_root' ? $contentDir : ($uploadTargets[$target] ?? null);
+
+        if ($targetDir && $filename) {
+            $filepath = $targetDir . '/' . $filename;
             if (is_file($filepath)) {
                 unlink($filepath);
                 $_SESSION['flash'] = "Deleted {$filename} from {$target}.";
@@ -437,11 +440,9 @@ function render_admin_dashboard(array $cfg): never {
                 echo '<label class="full-width">Description<textarea name="fm_description" rows="2" placeholder="optional">' . e($item['description']) . '</textarea></label>';
                 echo '</div>';
                 echo '<div class="edit-actions"><button type="submit">Save</button>';
-                echo ' <form method="POST" action="/admin/delete" style="display:inline" onclick="event.stopPropagation()">';
-                echo '<input type="hidden" name="target" value="' . e($uploadTarget ?: 'projects') . '">';
-                echo '<input type="hidden" name="filename" value="' . e(basename($item['file'])) . '">';
-                echo '<button type="submit" onclick="return confirm(\'Delete ' . e(basename($item['file'])) . '?\')" style="background:#c00">Delete</button>';
-                echo '</form></div>';
+                $delTarget = $uploadTarget ?: '_root';
+                echo '<button type="button" onclick="deleteFile(\'' . e($delTarget) . '\', \'' . e(basename($item['file'])) . '\')" style="background:#c00">Delete</button>';
+                echo '</div>';
                 echo '</form>';
                 echo '</td></tr>';
 
@@ -513,6 +514,10 @@ function render_admin_dashboard(array $cfg): never {
     echo '</div></div>';
 
     echo <<<'SCRIPT'
+    <form id="delete-form" method="POST" action="/admin/delete" style="display:none">
+        <input type="hidden" name="target" id="del-target">
+        <input type="hidden" name="filename" id="del-filename">
+    </form>
     <script>
     function toggleEdit(id) {
         var r = document.getElementById(id);
@@ -524,6 +529,12 @@ function render_admin_dashboard(array $cfg): never {
         var upload = header.parentElement.querySelector('.section-upload');
         if (body) body.classList.toggle('hidden');
         if (upload) upload.classList.toggle('hidden');
+    }
+    function deleteFile(target, filename) {
+        if (!confirm('Delete ' + filename + '?')) return;
+        document.getElementById('del-target').value = target;
+        document.getElementById('del-filename').value = filename;
+        document.getElementById('delete-form').submit();
     }
     </script>
     SCRIPT;

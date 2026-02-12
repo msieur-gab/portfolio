@@ -152,12 +152,15 @@ function file_to_url_path(string $relpath): string {
  */
 function find_doc_by_path(string $urlPath, string $baseDir, string $contentDir, array $folders): ?array {
     $filepath = $contentDir . '/' . $urlPath . '.md';
-    if (is_file($filepath)) {
-        $relpath = 'content/' . $urlPath . '.md';
-        $fm = parse_frontmatter($filepath);
-        return $fm ? array_merge($fm, ['_file' => $relpath]) : null;
-    }
-    return null;
+    if (!is_file($filepath)) return null;
+
+    // Ensure resolved path stays inside content directory
+    $real = realpath($filepath);
+    if (!$real || !str_starts_with($real, realpath($contentDir) . '/')) return null;
+
+    $relpath = 'content/' . $urlPath . '.md';
+    $fm = parse_frontmatter($filepath);
+    return $fm ? array_merge($fm, ['_file' => $relpath]) : null;
 }
 
 /**

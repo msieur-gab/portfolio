@@ -49,6 +49,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $hash = password_hash($password, PASSWORD_BCRYPT);
 
+        // Escape values for safe PHP source generation
+        $safeTitle = addslashes($siteTitle);
+        $safeUrl   = addslashes($siteUrl);
+        $safeDesc  = addslashes($siteDesc);
+
         $configContent = <<<PHP
 <?php
 /**
@@ -56,9 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  */
 
 return [
-    'site_title'       => '{$siteTitle}',
-    'site_url'         => '{$siteUrl}',
-    'site_description' => '{$siteDesc}',
+    'site_title'       => '{$safeTitle}',
+    'site_url'         => '{$safeUrl}',
+    'site_description' => '{$safeDesc}',
     'admin_password'   => '{$hash}',
     'content_dir'      => __DIR__ . '/../content',
     'content_folders'  => ['projects', 'experiments', 'research'],
