@@ -1,22 +1,23 @@
 ---
 title: The Wheel That Listens
-description: "On designing for the hand that holds, the thumb that arcs, and the silence that waits at the end of attention."
+description: On designing for the hand that holds, the thumb that arcs, and the silence that waits at the end of attention.
 date:
     published: 2025-01-27
 thumbnail: /content/media/wheel-hero.jpg
-status: published
+status: draft
 series: 01
 category: project
+project:
+    status: in-progress
+    timeline:
+        start: 2024
+featured: false
 tags:
     - meditation
     - interaction-design
     - biomechanics
     - mobile
     - mindfulness
-project:
-    status: in-progress
-    timeline:
-        start: 2024
 ---
 
 # The Wheel That Listens

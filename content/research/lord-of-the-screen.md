@@ -1,12 +1,13 @@
 ---
 title: The Lord of the Screen
-description: "On algorithmic seduction, the disappearance of boredom, and what we lose when we stop choosing for ourselves."
+description: On algorithmic seduction, the disappearance of boredom, and what we lose when we stop choosing for ourselves.
 date:
     published: 2025-01-27
 thumbnail: /content/media/lord-screen.jpg
-status: published
+status: draft
 series: 14
 category: reflexion
+featured: false
 tags:
     - algorithms
     - attention

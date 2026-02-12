@@ -1,12 +1,17 @@
 ---
 title: Vroom
-description: "A wooden car that goes nowhere and everywhere. No screen, no battery, no app — just wood, wheels, and an NFC tag that unlocks a shared story between parent and child. An antidote to the scrolling thumb on the park bench. On boredom as a gift, play as presence, and the bridge between a child's hand and a parent's attention."
+description: A wooden car that goes nowhere and everywhere. No screen, no battery, no app — just wood, wheels, and an NFC tag that unlocks a shared story between parent and child. An antidote to the scrolling thumb on the park bench. On boredom as a gift, play as presence, and the bridge between a child's hand and a parent's attention.
 date:
     published: 2025-01-27
 thumbnail: /content/media/vroom-hero.jpg
-status: published
+status: draft
 series: 31
 category: project
+project:
+    status: in-progress
+    timeline:
+        start: 2024
+featured: false
 tags:
     - play
     - childhood
@@ -14,10 +19,6 @@ tags:
     - wood
     - family
     - imagination
-project:
-    status: in-progress
-    timeline:
-        start: 2024
 ---
 
 # Vroom

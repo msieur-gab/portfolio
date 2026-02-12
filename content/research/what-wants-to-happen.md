@@ -1,12 +1,13 @@
 ---
 title: What Wants to Happen
-description: "On designing with the grain — code, craft, and the patience to let solutions emerge."
+description: On designing with the grain — code, craft, and the patience to let solutions emerge.
 date:
     published: 2025-01-27
 thumbnail: /content/media/what-wants.jpg
-status: published
+status: draft
 series: 13
 category: reflexion
+featured: false
 tags:
     - design-philosophy
     - wu-wei

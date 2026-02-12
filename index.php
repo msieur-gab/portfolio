@@ -400,20 +400,125 @@ if (str_starts_with($path, '/admin')) {
         exit;
     }
 
+    // ─── Edit frontmatter handler ─────────────────────────────────────────
+
+    if ($path === '/admin/edit' && $method === 'POST') {
+        $file = $_POST['file'] ?? '';
+
+        // Validate file path: must be a real content file in an allowed directory
+        $fullpath = __DIR__ . '/' . $file;
+        $realpath = realpath($fullpath);
+        $validDir = false;
+        if ($realpath && str_ends_with($file, '.md')) {
+            foreach (UPLOAD_TARGETS as $dir) {
+                if (str_starts_with($realpath, realpath($dir) . '/')) {
+                    $validDir = true;
+                    break;
+                }
+            }
+            // Also allow root content dir (about.md etc.)
+            if (!$validDir && str_starts_with($realpath, realpath(CONTENT_DIR) . '/') && dirname($realpath) === realpath(CONTENT_DIR)) {
+                $validDir = true;
+            }
+        }
+
+        if (!$validDir || !is_file($fullpath)) {
+            $_SESSION['flash'] = 'Invalid file path.';
+            header('Location: /admin');
+            exit;
+        }
+
+        $raw = file_get_contents($fullpath);
+
+        // Split frontmatter from body
+        if (!str_starts_with($raw, '---')) {
+            $_SESSION['flash'] = 'File has no frontmatter block.';
+            header('Location: /admin');
+            exit;
+        }
+
+        $end = strpos($raw, "\n---", 3);
+        if ($end === false) {
+            $_SESSION['flash'] = 'Malformed frontmatter.';
+            header('Location: /admin');
+            exit;
+        }
+
+        $fmBlock = substr($raw, 4, $end - 4); // raw frontmatter text (without --- markers)
+        $body = substr($raw, $end + 4);         // everything after closing ---
+
+        // Fields we handle — replace or append in the raw block
+        $editable = [
+            'title'       => trim($_POST['fm_title'] ?? ''),
+            'description' => trim($_POST['fm_description'] ?? ''),
+            'status'      => trim($_POST['fm_status'] ?? ''),
+            'category'    => trim($_POST['fm_category'] ?? ''),
+            'featured'    => isset($_POST['fm_featured']) ? 'true' : 'false',
+            'series'      => trim($_POST['fm_series'] ?? ''),
+        ];
+
+        // Tags: comma-separated → YAML list
+        $tagsRaw = trim($_POST['fm_tags'] ?? '');
+        $tags = $tagsRaw !== '' ? array_map('trim', explode(',', $tagsRaw)) : [];
+
+        foreach ($editable as $key => $val) {
+            if ($val === '' && $key !== 'featured') {
+                // Remove the key if value is empty (except featured which is always bool)
+                $fmBlock = preg_replace('/^' . preg_quote($key, '/') . ':.*\n?/m', '', $fmBlock);
+                continue;
+            }
+            // Replace existing or append
+            if (preg_match('/^' . preg_quote($key, '/') . ':\s*.*/m', $fmBlock)) {
+                $fmBlock = preg_replace('/^' . preg_quote($key, '/') . ':\s*.*/m', $key . ': ' . $val, $fmBlock);
+            } else {
+                $fmBlock = rtrim($fmBlock) . "\n" . $key . ': ' . $val;
+            }
+        }
+
+        // Handle tags — remove existing tag block (top-level key + indented items), then append
+        $fmBlock = preg_replace('/^tags:\s*\n(?:    - .+\n?)*/m', '', $fmBlock);
+        $fmBlock = preg_replace('/^tags:\s*.+\n?/m', '', $fmBlock); // single-line tags: foo
+        if (!empty($tags)) {
+            $tagLines = "tags:\n";
+            foreach ($tags as $t) {
+                $tagLines .= "    - " . $t . "\n";
+            }
+            $fmBlock = rtrim($fmBlock) . "\n" . $tagLines;
+        }
+
+        $fmBlock = trim($fmBlock);
+        $newContent = "---\n" . $fmBlock . "\n---" . $body;
+
+        file_put_contents($fullpath, $newContent);
+        $_SESSION['flash'] = 'Updated frontmatter for ' . basename($file) . '.';
+        header('Location: /admin');
+        exit;
+    }
+
     // ─── Admin dashboard ─────────────────────────────────────────────────
 
     $subs = has_sqlite() ? db()->querySingle('SELECT COUNT(*) FROM subscribers') : '—';
     $flash = $_SESSION['flash'] ?? '';
     unset($_SESSION['flash']);
 
-    // Gather content files with status
+    // Gather content files with full frontmatter
     $allContent = [];
     foreach (scan_content_files() as $relpath) {
-        $fm = parse_frontmatter(__DIR__ . '/' . $relpath);
+        $fm = parse_frontmatter(__DIR__ . '/' . $relpath) ?? [];
+        // Flatten tags array to comma string for form
+        $tagsStr = '';
+        if (isset($fm['tags']) && is_array($fm['tags'])) {
+            $tagsStr = implode(', ', $fm['tags']);
+        }
         $allContent[] = [
-            'file'   => $relpath,
-            'title'  => $fm['title'] ?? basename($relpath, '.md'),
-            'status' => $fm['status'] ?? '—',
+            'file'        => $relpath,
+            'title'       => $fm['title'] ?? basename($relpath, '.md'),
+            'status'      => $fm['status'] ?? '—',
+            'description' => $fm['description'] ?? '',
+            'tags'        => $tagsStr,
+            'featured'    => ($fm['featured'] ?? '') === 'true',
+            'series'      => $fm['series'] ?? '',
+            'category'    => $fm['category'] ?? '',
         ];
     }
 
@@ -437,19 +542,50 @@ if (str_starts_with($path, '/admin')) {
         sort($protoFiles);
     }
 
-    // Build content table rows
+    // Build content table rows with inline edit forms
     $contentRows = '';
+    $rowIdx = 0;
     foreach ($allContent as $item) {
         $statusColor = match ($item['status']) {
             'published' => '#090',
             'draft'     => '#c90',
             default     => '#999',
         };
-        $contentRows .= '<tr>';
+        $id = 'edit-' . $rowIdx;
+        $contentRows .= '<tr class="content-row" onclick="toggleEdit(\'' . $id . '\')" style="cursor:pointer">';
         $contentRows .= '<td>' . e($item['title']) . '</td>';
         $contentRows .= '<td><code>' . e($item['file']) . '</code></td>';
         $contentRows .= '<td><span style="color:' . $statusColor . '">' . e($item['status']) . '</span></td>';
         $contentRows .= '</tr>';
+
+        // Inline edit form row (hidden by default)
+        $statusOpts = '';
+        foreach (['published', 'draft', 'archive'] as $s) {
+            $sel = $item['status'] === $s ? ' selected' : '';
+            $statusOpts .= '<option value="' . $s . '"' . $sel . '>' . ucfirst($s) . '</option>';
+        }
+        $featuredChk = $item['featured'] ? ' checked' : '';
+
+        $contentRows .= '<tr id="' . $id . '" class="edit-row" style="display:none">';
+        $contentRows .= '<td colspan="3">';
+        $contentRows .= '<form method="POST" action="/admin/edit" class="edit-form" onclick="event.stopPropagation()">';
+        $contentRows .= '<input type="hidden" name="file" value="' . e($item['file']) . '">';
+
+        $contentRows .= '<div class="edit-grid">';
+        $contentRows .= '<label>Title<input type="text" name="fm_title" value="' . e($item['title']) . '" required></label>';
+        $contentRows .= '<label>Status<select name="fm_status">' . $statusOpts . '</select></label>';
+        $contentRows .= '<label>Category<input type="text" name="fm_category" value="' . e($item['category']) . '" placeholder="project, experiment..."></label>';
+        $contentRows .= '<label>Series<input type="number" name="fm_series" value="' . e($item['series']) . '" placeholder="optional"></label>';
+        $contentRows .= '<label>Tags<input type="text" name="fm_tags" value="' . e($item['tags']) . '" placeholder="comma-separated"></label>';
+        $contentRows .= '<label class="checkbox-label"><input type="checkbox" name="fm_featured"' . $featuredChk . '> Featured</label>';
+        $contentRows .= '<label class="full-width">Description<textarea name="fm_description" rows="2" placeholder="optional">' . e($item['description']) . '</textarea></label>';
+        $contentRows .= '</div>';
+
+        $contentRows .= '<div class="edit-actions"><button type="submit">Save</button></div>';
+        $contentRows .= '</form>';
+        $contentRows .= '</td></tr>';
+
+        $rowIdx++;
     }
 
     // Build media list
@@ -519,6 +655,21 @@ if (str_starts_with($path, '/admin')) {
 
         a { color: #111; }
         .empty { color: #999; font-size: .85rem; font-style: italic; }
+
+        /* Inline edit forms */
+        .content-row:hover { background: #f5f5f5; }
+        .edit-row td { padding: .75rem; background: #fafafa; border-bottom: 2px solid #e0e0e0; }
+        .edit-form { margin: 0; }
+        .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem .75rem; }
+        .edit-grid label { display: flex; flex-direction: column; font-size: .75rem; color: #666; text-transform: uppercase; gap: .2rem; }
+        .edit-grid input[type=text], .edit-grid input[type=number], .edit-grid select, .edit-grid textarea {
+            padding: .4rem; border: 1px solid #ddd; border-radius: 4px; font: inherit; font-size: .85rem;
+        }
+        .edit-grid textarea { resize: vertical; }
+        .edit-grid .full-width { grid-column: 1 / -1; }
+        .edit-grid .checkbox-label { flex-direction: row; align-items: center; gap: .4rem; padding-top: 1.2rem; }
+        .edit-grid .checkbox-label input { width: auto; }
+        .edit-actions { margin-top: .5rem; display: flex; gap: .5rem; }
     </style></head><body>
 
     <h1>Files <span>{$subs} subscribers · <a href="/feed.xml">RSS</a> · <a href="/admin/logout">logout</a></span></h1>
@@ -556,6 +707,7 @@ if (str_starts_with($path, '/admin')) {
         echo '<p class="empty">No prototype files.</p>';
     }
 
+    echo '<script>function toggleEdit(id){var r=document.getElementById(id);if(r)r.style.display=r.style.display==="none"?"table-row":"none";}</script>';
     echo '</body></html>';
     exit;
 }

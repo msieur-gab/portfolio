@@ -448,7 +448,6 @@ async function init() {
   if (hash) {
     const doc = allDocs.find(d => d.id === hash || d.id.endsWith('-' + hash));
     if (doc) {
-      if (docParam) history.replaceState(null, '', location.pathname + '#' + doc.id);
       openPanel(doc);
     }
   }

@@ -1,12 +1,13 @@
 ---
 title: There Are No Problems
-description: "On the lie we were taught, the rocks that aren't in our way, and why design dies when we call it problem-solving."
+description: On the lie we were taught, the rocks that aren't in our way, and why design dies when we call it problem-solving.
 date:
     published: 2025-01-27
 thumbnail: /content/media/no-problems-hero.jpg
-status: published
+status: draft
 series: 12
 category: reflexion
+featured: false
 tags:
     - design-philosophy
     - wu-wei

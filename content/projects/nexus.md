@@ -1,13 +1,17 @@
 ---
 title: Nexus
-description: "An alternate reality game where you get hacked first, then learn why it matters. By 2026, every European citizen gets a digital identity wallet. Most will not understand what that means until it is already their reality. Nexus teaches sovereignty through consequence — not slides, not warnings, but lived experience in a controlled breach."
+description: An alternate reality game where you get hacked first, then learn why it matters. By 2026, every European citizen gets a digital identity wallet. Most will not understand what that means until it is already their reality. Nexus teaches sovereignty through consequence — not slides, not warnings, but lived experience in a controlled breach.
 date:
     published: 2025-01-27
 thumbnail: /content/media/nexus-hero.jpg
-status: published
+status: draft
 series: 21
 featured: true
 category: project
+project:
+    status: in-progress
+    timeline:
+        start: 2024
 tags:
     - privacy
     - education
@@ -16,10 +20,6 @@ tags:
     - cryptography
     - WebRTC
     - EUDI
-project:
-    status: in-progress
-    timeline:
-        start: 2024
 ---
 
 # Nexus

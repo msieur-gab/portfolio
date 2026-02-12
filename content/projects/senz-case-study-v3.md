@@ -1,24 +1,24 @@
 ---
-title: "Senz: Making Sense of Ideas"
-description: "How an innovation lab inside a Fortune 500 insurer built the tool that let domain experts test ideas in hours instead of months."
+title: Senz
+description: How an innovation lab inside a Fortune 500 insurer built the tool that let domain experts test ideas in hours instead of months.
 date:
     published: 2018-09-01
 status: published
 series: 41
 featured: true
 category: project
-tags:
-    - AI
-    - sketch-to-code
-    - innovation
-    - prototyping
-    - computer-vision
-    - Allianz
 project:
     status: completed
     timeline:
         start: 2018
         end: 2021
+tags:
+    - AI
+    - computer-vision
+    - sketch-to-code
+    - innovation
+    - prototyping
+    - Allianz
 ---
 
 # Senz

@@ -1,22 +1,23 @@
 ---
 title: CYPHER
-description: "A game where the architecture is the lesson. On teaching digital sovereignty by making it the only way to play."
+description: A game where the architecture is the lesson. On teaching digital sovereignty by making it the only way to play.
 date:
     published: 2025-01-27
 thumbnail: /content/media/cypher-hero.jpg
-status: published
+status: draft
 series: 22
 category: project
+project:
+    status: in-progress
+    timeline:
+        start: 2024
+featured: false
 tags:
     - privacy
     - education
     - games
     - sovereignty
     - architecture
-project:
-    status: in-progress
-    timeline:
-        start: 2024
 ---
 
 # CYPHER

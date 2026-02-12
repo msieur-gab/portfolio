@@ -1,29 +1,29 @@
 ---
 title: Scroll Sync
-description: "A meditation on synchronized storytelling — where text and image move as one, and complexity dissolves into intuition."
+description: A meditation on synchronized storytelling — where text and image move as one, and complexity dissolves into intuition.
 date:
     published: 2025-01-27
     updated: 2025-01-27
 thumbnail: /content/media/scroll-sync-hero.jpg
-status: published
+status: draft
 series: 51
 featured: true
 category: project
 subcategories:
     - design-systems
     - web-components
-tags:
-    - scroll-sync
-    - storytelling
-    - accessibility
-    - web-components
-    - interaction-design
 project:
     status: completed
     timeline:
         start: 2025-01
         end: 2025-01
     client: Personal Project
+tags:
+    - scroll-sync
+    - storytelling
+    - accessibility
+    - web-components
+    - interaction-design
 ---
 
 # Scroll Sync: When Less Becomes More

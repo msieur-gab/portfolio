@@ -1,12 +1,13 @@
 ---
 title: Design Has No Method
-description: "Against frameworks. There is an industry built on selling design methodologies — double diamonds, sprint templates, empathy packaged into persona cards. Each problem has its own grain. Each context demands its own attention. What works is simpler and harder: observation, curiosity, empathy, and the patience to let solutions emerge rather than forcing them into existence."
+description: Against frameworks. There is an industry built on selling design methodologies — double diamonds, sprint templates, empathy packaged into persona cards. Each problem has its own grain. Each context demands its own attention. What works is simpler and harder: observation, curiosity, empathy, and the patience to let solutions emerge rather than forcing them into existence.
 date:
     published: 2025-01-27
 thumbnail: /content/media/water-stone.jpg
-status: published
+status: draft
 series: 11
 category: reflexion
+featured: false
 tags:
     - design-philosophy
     - methodology

@@ -1,22 +1,23 @@
 ---
-title: "Dowgo: The File System Was Not the Problem"
-description: "How two weeks of dialogue, prototyping, and restraint turned a due diligence platform from passive storage into guided action."
+title: Rehinking due diligence
+description: How two weeks of dialogue, prototyping, and restraint turned a due diligence platform from passive storage into guided action.
 date:
     published: 2024-01-15
 status: published
 series: 81
 category: project
-tags:
-    - UX
-    - consulting
-    - prototyping
-    - due-diligence
-    - blockchain
-    - renewable-energy
 project:
     status: in-production
     timeline:
         start: 2024
+featured: false
+tags:
+    - UX
+    - Fintech
+    - prototyping
+    - due-diligence
+    - blockchain
+    - renewable-energy
 ---
 
 # ~~Dowgo~~

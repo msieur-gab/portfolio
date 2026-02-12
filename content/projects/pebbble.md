@@ -1,12 +1,17 @@
 ---
 title: Pebbble
-description: "A stone that carries voices across borders, walls, and the silence of separation. NFC-enabled, battery-free, censorship-resistant. A parent records a message, the stone holds it. A child taps it, the voice plays. Built on IPFS and client-side encryption for the cases no authority can quantify — when distance is not chosen but stolen."
+description: A stone that carries voices across borders, walls, and the silence of separation. NFC-enabled, battery-free, censorship-resistant. A parent records a message, the stone holds it. A child taps it, the voice plays. Built on IPFS and client-side encryption for the cases no authority can quantify — when distance is not chosen but stolen.
 date:
     published: 2025-01-27
 thumbnail: /content/media/pebbles.jpg
-status: published
+status: draft
 series: 23
 category: project
+project:
+    status: in-progress
+    timeline:
+        start: 2024
+featured: false
 tags:
     - privacy
     - family
@@ -14,10 +19,6 @@ tags:
     - ipfs
     - voice
     - connection
-project:
-    status: in-progress
-    timeline:
-        start: 2024
 ---
 
 # Pebbble

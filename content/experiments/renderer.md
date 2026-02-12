@@ -1,9 +1,10 @@
 ---
-title: "Renderer Test"
-description: "Exercises every rendering path — images, charts, flows, lists, code, prototypes"
+title: Renderer Test
+description: Exercises every rendering path — images, charts, flows, lists, code, prototypes
 category: experiments
-status: published
+status: draft
 series: 54
+featured: false
 ---
 
 # Renderer Test

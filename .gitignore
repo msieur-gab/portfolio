@@ -2,6 +2,9 @@
 chart/
 flow/
 
+# Environment secrets
+.htaccess
+
 # SQLite database
 subscribers.db
 subscribers.db-wal

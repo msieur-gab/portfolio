@@ -1,9 +1,10 @@
 ---
-title: "Charts & Graphs"
-description: "Markdown-embedded data visualizations and flow diagrams - demonstrated with Pebbble project data"
+title: Charts & Graphs
+description: Markdown-embedded data visualizations and flow diagrams - demonstrated with Pebbble project data
 category: experiments
-status: published
+status: draft
 series: 53
+featured: false
 ---
 
 # Charts & Graphs in Markdown
