@@ -195,4 +195,32 @@ export function groupByCategory(docs) {
   return grouped;
 }
 
+/**
+ * Convert a doc ID to a clean URL path
+ * e.g. "projects-cypher" → "/projects/cypher", "home" → "/"
+ */
+export function idToPath(id) {
+  if (!id || id === 'home') return '/';
+  // The ID format is "folder-slug" where folder is one of FOLDERS
+  // Replace only the first dash that separates the folder from the slug
+  for (const folder of FOLDERS) {
+    if (id.startsWith(folder + '-')) {
+      return '/' + folder + '/' + id.slice(folder.length + 1);
+    }
+  }
+  // Root-level doc (no folder prefix)
+  return '/' + id;
+}
+
+/**
+ * Convert a URL path back to a doc ID
+ * e.g. "/projects/cypher" → "projects-cypher", "/" → null
+ */
+export function pathToDocId(urlPath) {
+  const clean = urlPath.replace(/^\/|\/$/g, '');
+  if (!clean) return null;
+  // "projects/cypher" → "projects-cypher"
+  return clean.replace(/\//g, '-');
+}
+
 export { FOLDERS };

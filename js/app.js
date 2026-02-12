@@ -4,7 +4,7 @@
 
 import './components/scroll-sync.js';
 import './components/proto-sandbox.js';
-import { discoverContent, loadDocument, groupByCategory, FOLDERS } from './services/content.js';
+import { discoverContent, loadDocument, groupByCategory, FOLDERS, idToPath, pathToDocId } from './services/content.js';
 import { extractCategories, applyFilters } from './services/filters.js';
 import { hydrateMedia } from './utils/markdown.js';
 import { getIconSvg } from './utils/icons.js';
@@ -344,8 +344,8 @@ async function openPanel(doc) {
   panelTitle.textContent = doc.label;
   panelCategory.textContent = doc.category || '';
 
-  // Update URL hash
-  history.replaceState(null, '', `#${doc.id}`);
+  // Update URL to clean path
+  history.pushState({ docId: doc.id }, '', idToPath(doc.id));
 
   // Open panel
   document.body.classList.add('panel-open');
@@ -366,6 +366,40 @@ async function openPanel(doc) {
 }
 
 /**
+ * Open panel without pushing history (for popstate / initial load)
+ */
+async function openPanelSilent(doc) {
+  cardsContainer.querySelectorAll('.card').forEach(card => {
+    card.classList.toggle('active', card.dataset.id === doc.id);
+  });
+
+  currentDoc = doc;
+  panelTitle.textContent = doc.label;
+  panelCategory.textContent = doc.category || '';
+  document.body.classList.add('panel-open');
+
+  const { html } = await loadDocument(doc);
+  content.innerHTML = html;
+  await hydrateMedia(content);
+
+  requestAnimationFrame(() => {
+    scrollSync.recompute();
+    panel.querySelector('scroll-sync').scrollTo(0, 0);
+  });
+}
+
+/**
+ * Close panel without pushing history (for popstate)
+ */
+function closePanelSilent() {
+  document.body.classList.remove('panel-open');
+  currentDoc = null;
+  cardsContainer.querySelectorAll('.card').forEach(card => {
+    card.classList.remove('active');
+  });
+}
+
+/**
  * Close panel
  */
 function closePanel() {
@@ -377,8 +411,8 @@ function closePanel() {
     card.classList.remove('active');
   });
 
-  // Update URL
-  history.replaceState(null, '', window.location.pathname);
+  // Update URL to root
+  history.pushState(null, '', '/');
 
   // Return to cards grid
   scrollToGrid();
@@ -442,13 +476,34 @@ async function init() {
   searchToggle.addEventListener('click', toggleSearch);
   searchInput.addEventListener('input', onSearchInput);
 
-  // Check for hash or ?doc= param in URL and open that doc
-  const docParam = new URLSearchParams(location.search).get('doc');
-  const hash = docParam || location.hash.slice(1);
-  if (hash) {
-    const doc = allDocs.find(d => d.id === hash || d.id.endsWith('-' + hash));
+  // Handle popstate (browser back/forward)
+  window.addEventListener('popstate', () => {
+    const docId = pathToDocId(location.pathname);
+    if (docId) {
+      const doc = allDocs.find(d => d.id === docId);
+      if (doc) {
+        openPanelSilent(doc);
+        return;
+      }
+    }
+    // No doc in path — close panel
+    if (document.body.classList.contains('panel-open')) {
+      closePanelSilent();
+    }
+  });
+
+  // Route: clean path (/projects/cypher) or #hash (legacy bookmarks)
+  const pathDocId = pathToDocId(location.pathname);
+  const hash = location.hash.slice(1);
+
+  const targetId = pathDocId || hash;
+  if (targetId) {
+    const doc = allDocs.find(d => d.id === targetId || d.id.endsWith('-' + targetId));
     if (doc) {
-      openPanel(doc);
+      if (hash) {
+        history.replaceState({ docId: doc.id }, '', idToPath(doc.id));
+      }
+      openPanelSilent(doc);
     }
   }
 }

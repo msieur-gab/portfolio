@@ -4,8 +4,5 @@ flow/
 
 # Environment secrets
 .htaccess
+php/config.php
 
-# SQLite database
-subscribers.db
-subscribers.db-wal
-subscribers.db-shm

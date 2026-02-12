@@ -92,7 +92,7 @@ export function markdownToHtml(md, options = {}) {
       if (part === '..') baseParts.pop();
       else if (part !== '.') baseParts.push(part);
     }
-    return baseParts.join('/');
+    return '/' + baseParts.join('/');
   };
 
   let html = md
