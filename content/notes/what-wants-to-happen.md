@@ -111,6 +111,7 @@ Code is my material. It has grain. It has directions it wants to move and direct
 What matters is the attention. The willingness to sit with something unfinished. The discipline to remove what isn't necessary, even when it was difficult to build.
 
 > Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.
+> — Antoine de Saint-Exupéry
 
 I used to read that quote as advice about simplicity. Now I read it as advice about patience. You cannot know what to remove until you've watched carefully enough to see what isn't needed. And you cannot see what isn't needed until you stop assuming you already know.
 

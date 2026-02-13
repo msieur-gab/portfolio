@@ -109,6 +109,15 @@ export class ScrollSync extends LitElement {
       margin: 0;
     }
 
+    .media-slot blockquote cite {
+      display: block;
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-size: 0.8125rem;
+      margin-top: 0.5rem;
+      opacity: 0.5;
+    }
+
     /* Code figures */
     .media-slot pre {
       background: var(--color-text, #1a1a1a);

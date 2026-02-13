@@ -485,6 +485,54 @@ function handleKeydown(e) {
 }
 
 /**
+ * Load quotes from content/quotes.md and inject into quotes column
+ */
+async function loadQuotes() {
+  const container = document.getElementById('quotes-column');
+  if (!container) return;
+
+  try {
+    const res = await fetch('content/quotes.md');
+    if (!res.ok) throw new Error('Failed to load quotes');
+    const text = await res.text();
+
+    // Parse blockquotes: split on blank lines, extract > lines
+    const blocks = text.trim().split(/\n\n+/);
+    container.innerHTML = '';
+
+    for (const block of blocks) {
+      const lines = block.split('\n').filter(l => l.startsWith('>'));
+      if (!lines.length) continue;
+
+      const bq = document.createElement('blockquote');
+      let quoteLines = [];
+      let attribution = null;
+
+      for (const line of lines) {
+        const content = line.replace(/^>\s?/, '');
+        if (content.startsWith('\u2014') || content.startsWith('—')) {
+          attribution = content.replace(/^[—\u2014]\s*/, '');
+        } else {
+          quoteLines.push(content);
+        }
+      }
+
+      bq.textContent = quoteLines.join(' ');
+
+      if (attribution) {
+        const cite = document.createElement('cite');
+        cite.textContent = '\u2014 ' + attribution;
+        bq.appendChild(cite);
+      }
+
+      container.appendChild(bq);
+    }
+  } catch (e) {
+    container.innerHTML = '';
+  }
+}
+
+/**
  * Initialize the application
  */
 async function init() {
@@ -502,6 +550,7 @@ async function init() {
 
   initFilterCategories();
   renderFilteredCards();
+  loadQuotes();
   isInitialLoad = false;
 
   // Set up event listeners
@@ -521,6 +570,16 @@ async function init() {
       e.preventDefault();
       location.href = 'mailto:' + link.dataset.u + '@' + link.dataset.d;
     });
+  });
+
+  // Copy RSS feed URL to clipboard
+  const copyFeed = document.getElementById('copy-feed');
+  copyFeed.addEventListener('click', async () => {
+    const feedUrl = location.origin + '/feed.xml';
+    await navigator.clipboard.writeText(feedUrl);
+    const original = copyFeed.textContent;
+    copyFeed.textContent = 'Copied!';
+    setTimeout(() => { copyFeed.textContent = original; }, 1500);
   });
 
   // Handle popstate (browser back/forward)

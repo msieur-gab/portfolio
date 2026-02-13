@@ -146,6 +146,7 @@ These principles are not ranked — any one of them might take precedence depend
 Some prose between media blocks. **Bold text**, *italic text*, ~~strikethrough~~, ==highlighted==, and `inline code` should all render correctly. Inline formatting is applied after block-level parsing, so these markers survive inside paragraphs, list items, and other containers.
 
 > Design is not just what it looks like and feels like. Design is how it works.
+> — Steve Jobs
 
 Blockquotes are rendered as figure elements with a data-type of quote. In the scroll-sync sidebar, they appear as centered italic text without the traditional left border, giving them more visual presence as standalone media.
 

@@ -154,13 +154,21 @@ export function markdownToHtml(md, options = {}) {
     })
     // Blockquotes -> figure[data-media data-type="quote"]
     .replace(/(?:^> .+$\n?)+/gm, (match) => {
-      const content = match
+      const lines = match
         .split('\n')
         .map(line => line.replace(/^> ?/, ''))
-        .filter(line => line.trim())
-        .join('<br>');
+        .filter(line => line.trim());
+      let cite = '';
+      const quoteLines = [];
+      for (const line of lines) {
+        if (/^[—\u2014]\s*/.test(line)) {
+          cite = `<cite>${escapeHtml(line)}</cite>`;
+        } else {
+          quoteLines.push(line);
+        }
+      }
       return `<figure data-media data-type="quote">
-        <blockquote>${content}</blockquote>
+        <blockquote>${quoteLines.join('<br>')}${cite}</blockquote>
       </figure>`;
     })
     // Sub-headers (h6 used as overline labels)

@@ -265,8 +265,7 @@ body {
 [data-handed="left"] .icon-hand-left { display: block; }
 
 /* Full-screen sections */
-.section-intro,
-.section-contact {
+.section-intro {
   min-height: 100vh;
   width: 100%;
   display: flex;
@@ -307,35 +306,99 @@ body.panel-open .section-contact {
   margin: 0 0 1.5rem;
 }
 
-/* Contact section */
+/* Contact section — full screen, top/bottom split */
+.section-contact {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.contact-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* Quotes row — top 2/3, normal bg, horizontal scroll */
+.quotes-column {
+  height: 66vh;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  gap: 2rem;
+  padding: 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--push-10) transparent;
+}
+
+.quotes-column blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--color-text);
+  margin: 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--push-10);
+  min-width: 20rem;
+  max-width: 28rem;
+  flex-shrink: 0;
+}
+
+.quotes-column blockquote cite {
+  display: block;
+  font-family: var(--font-sans);
+  font-style: normal;
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+  opacity: 0.5;
+}
+
+/* Contact row — bottom 1/3, inverted bg */
+.contact-column {
+  height: 34vh;
+  background: var(--color-text);
+  color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2rem;
+}
+
 .contact-heading {
   font-family: var(--font-serif);
   font-size: 2rem;
   font-weight: 400;
-  margin-bottom: 2rem;
-  color: var(--color-text);
+  color: var(--color-bg);
+  margin: 0;
 }
 
 .contact-links {
   display: flex;
-  gap: 2rem;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
 }
 
 .contact-link {
-  color: var(--push-50);
+  color: var(--color-bg);
   text-decoration: none;
-  font-size: 1.125rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--push-10);
-  border-radius: 4px;
-  transition: color 0.15s, border-color 0.15s;
+  font-family: inherit;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+  background: color-mix(in oklch, var(--color-bg) 12%, transparent);
+  border: 1px solid color-mix(in oklch, var(--color-bg) 20%, transparent);
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
 .contact-link:hover {
-  color: var(--color-text);
-  border-color: var(--color-text);
+  background: color-mix(in oklch, var(--color-bg) 25%, transparent);
+  border-color: color-mix(in oklch, var(--color-bg) 35%, transparent);
 }
 
 /* Main container */
@@ -653,9 +716,9 @@ article li {
 /* Media figures in article - hidden on desktop, visible on mobile */
 article figure[data-media] {
   display: block;
-  height: 1px;
+  height: 0;
   overflow: hidden;
-  margin: 2rem 0;
+  margin: 0;
 }
 
 article figure[data-media] img,
@@ -767,6 +830,24 @@ article figure[data-media] pre {
     --scroll-sync-padding: 0 1rem 1rem;
   }
 
+  /* Contact section mobile */
+  .quotes-column {
+    padding: 2rem 1rem;
+  }
+
+  .quotes-column blockquote {
+    font-size: 1.125rem;
+    min-width: 16rem;
+    max-width: 22rem;
+  }
+
+  .contact-column {
+    padding: 2rem 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
   /* Show inline media on tablet/mobile (no scroll-sync sidebar) */
   article figure[data-media] {
     height: auto;
@@ -798,6 +879,15 @@ article figure[data-media] pre {
     border-left: 3px solid var(--color-text);
     padding-left: 1rem;
     margin: 0;
+  }
+
+  article figure[data-media] blockquote cite {
+    display: block;
+    font-family: var(--font-sans);
+    font-style: normal;
+    font-size: 0.8125rem;
+    margin-top: 0.5rem;
+    opacity: 0.5;
   }
 
   article figure[data-media] pre {

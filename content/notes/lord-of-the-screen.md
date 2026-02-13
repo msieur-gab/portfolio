@@ -22,6 +22,7 @@ tags:
 > One Screen to find them,
 > One Screen to bring them all
 > and in the darkness bind them.
+> — after J.R.R. Tolkien
 
 In Tolkien's mythology, the Ring did not enslave through force. It seduced. It whispered of power, of efficiency, of a better way. Those who wore it believed they were using it, right until the moment they realized it was using them.
 
@@ -132,6 +133,7 @@ We consume more creative work than any generation in history. We produce less. T
 ## The Binding
 
 > And in the darkness bind them.
+> — J.R.R. Tolkien
 
 The Ring's power was not just corruption but connection — it bound the other rings, bound their wearers, created a network of control with a single point of dominion.
 

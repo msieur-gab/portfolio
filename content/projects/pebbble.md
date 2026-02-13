@@ -26,6 +26,7 @@ tags:
 
 > "Loin des yeux, loin du cœur."
 > Far from the eyes, far from the heart.
+> — French proverb
 
 The proverb exists in every language because the pain exists in every culture. Distance erodes presence. Absence, sustained long enough, becomes its own kind of loss — not the sharp grief of death, but the slow fade of connection stretched too thin.
 

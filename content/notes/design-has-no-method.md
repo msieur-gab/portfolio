@@ -91,6 +91,7 @@ This is not an argument against global products. It is an argument for global hu
 Design is not neutral. Every choice embeds values — whose time is respected, whose attention is harvested, whose data is protected, whose needs are centered.
 
 > "The things we make, make us."
+> — Sherry Turkle
 
 A notification that interrupts is a statement about whose time matters. A default that shares data is a statement about whose interests are served. A flow that requires literacy is a statement about who belongs.
 
