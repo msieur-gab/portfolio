@@ -41,6 +41,7 @@ export class ProtoSandbox extends LitElement {
 
     .sandbox-frame {
       width: 100%;
+      max-height: 60vh;
       border: none;
       border-radius: 8px;
       background: transparent;

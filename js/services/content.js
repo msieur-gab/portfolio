@@ -7,7 +7,7 @@ import { parseMarkdown } from '../utils/markdown.js';
 
 // Content configuration
 const CONTENT_BASE = './content';
-const FOLDERS = ['projects', 'experiments', 'research'];
+const FOLDERS = ['projects', 'explorations', 'notes'];
 const INTRO_FILES = ['about.md', 'index.md', 'intro.md'];
 
 /**

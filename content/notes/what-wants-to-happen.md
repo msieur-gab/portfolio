@@ -6,7 +6,7 @@ date:
 thumbnail: /content/media/what-wants.jpg
 status: draft
 series: 13
-category: reflexion
+category: notes
 featured: false
 tags:
     - craft

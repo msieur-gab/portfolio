@@ -4,7 +4,7 @@ description: "An e-ink watch concept exploring time as presence rather than posi
 status: published
 series: 52
 featured: true
-category: experiments
+category: explorations
 tags:
     - interaction-design
     - vanilla-js

@@ -4,7 +4,7 @@ description: "An unfinished reflection, still taking shape."
 date:
     published: 2025-06-01
 status: draft
-category: reflexion
+category: notes
 tags:
     - wip
     - draft

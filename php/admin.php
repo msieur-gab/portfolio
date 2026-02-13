@@ -60,7 +60,7 @@ function handle_admin(string $path, string $method, array $cfg): never {
         if (!is_dir($destDir)) mkdir($destDir, 0755, true);
 
         $allowedExt = match ($target) {
-            'projects', 'experiments', 'research' => ['md'],
+            'projects', 'explorations', 'notes' => ['md'],
             'media' => ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg'],
             'prototypes' => ['html', 'css', 'js', 'svg', 'jpg', 'jpeg', 'png', 'webp', 'gif', 'json'],
         };

@@ -66,11 +66,11 @@ return [
     'site_description' => '{$safeDesc}',
     'admin_password'   => '{$hash}',
     'content_dir'      => __DIR__ . '/../content',
-    'content_folders'  => ['projects', 'experiments', 'research'],
+    'content_folders'  => ['projects', 'explorations', 'notes'],
     'upload_targets'   => [
-        'projects'   => __DIR__ . '/../content/projects',
-        'experiments' => __DIR__ . '/../content/experiments',
-        'research'   => __DIR__ . '/../content/research',
+        'projects'     => __DIR__ . '/../content/projects',
+        'explorations' => __DIR__ . '/../content/explorations',
+        'notes'        => __DIR__ . '/../content/notes',
         'media'      => __DIR__ . '/../content/media',
         'prototypes' => __DIR__ . '/../content/prototypes',
     ],
@@ -103,7 +103,7 @@ HTACCESS;
         }
 
         // Create content directories if missing
-        $contentDirs = ['content', 'content/projects', 'content/experiments', 'content/research', 'content/media'];
+        $contentDirs = ['content', 'content/projects', 'content/explorations', 'content/notes', 'content/media'];
         foreach ($contentDirs as $dir) {
             $path = __DIR__ . '/' . $dir;
             if (!is_dir($path)) {

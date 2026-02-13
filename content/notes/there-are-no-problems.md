@@ -6,7 +6,7 @@ date:
 thumbnail: /content/media/no-problems-hero.jpg
 status: draft
 series: 12
-category: reflexion
+category: notes
 featured: false
 tags:
     - craft

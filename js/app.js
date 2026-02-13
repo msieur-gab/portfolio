@@ -262,7 +262,7 @@ function renderFilteredCards() {
  * Build category pill buttons in the header
  */
 function initFilterCategories() {
-  const categories = extractCategories(allDocs);
+  const categories = extractCategories(allDocs, FOLDERS);
   filterCategoriesEl.innerHTML = '';
 
   // "All" button

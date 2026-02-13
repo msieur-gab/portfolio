@@ -133,6 +133,7 @@ body {
   background: var(--lift-40);
   border: none;
   color: var(--push-80);
+  text-transform: capitalize;
   padding: 0 0.625rem;
   height: 1.625rem;
   line-height: 1.625rem;
@@ -285,17 +286,25 @@ body.panel-open .section-contact {
 }
 
 .section-inner {
-  max-width: 42rem;
+  max-width: 54rem;
   text-align: center;
 }
 
 /* Intro section */
-.intro-text {
-  font-family: var(--font-serif);
+.section-intro p {
   font-size: 1.75rem;
   line-height: 1.4;
   color: var(--color-text);
+  margin-bottom: 1.5rem;
+}
+
+.section-intro blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  line-height: 1.4;
   font-style: italic;
+  color: var(--color-text);
+  margin: 0 0 1.5rem;
 }
 
 /* Contact section */
@@ -739,8 +748,8 @@ article figure[data-media] pre {
   }
 
   .cards-grid {
-    padding: 0;
-    grid-template-columns: 1fr;
+    padding: 0 1rem;
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
 
@@ -758,7 +767,7 @@ article figure[data-media] pre {
     --scroll-sync-padding: 0 1rem 1rem;
   }
 
-  /* Show inline media on mobile */
+  /* Show inline media on tablet/mobile (no scroll-sync sidebar) */
   article figure[data-media] {
     height: auto;
     overflow: visible;
@@ -806,11 +815,18 @@ article figure[data-media] pre {
     padding: 0;
   }
 
-  /* Charts and graphs on mobile */
+  /* Charts and graphs */
   article figure[data-media] flow-chart,
   article figure[data-media] flow-graph {
     display: block;
     width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .cards-grid {
+    padding: 0;
+    grid-template-columns: 1fr;
   }
 
   /* Prevent body scroll when panel is open on mobile */

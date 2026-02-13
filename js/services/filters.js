@@ -8,12 +8,16 @@
  * @param {Array} docs
  * @returns {string[]} Sorted category names
  */
-export function extractCategories(docs) {
+export function extractCategories(docs, folderOrder = []) {
   const cats = new Set();
   for (const doc of docs) {
     if (doc.category) cats.add(doc.category);
   }
-  return [...cats].sort();
+  const ordered = folderOrder.filter(f => cats.has(f));
+  for (const cat of cats) {
+    if (!ordered.includes(cat)) ordered.push(cat);
+  }
+  return ordered;
 }
 
 /**

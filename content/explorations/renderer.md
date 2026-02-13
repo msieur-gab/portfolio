@@ -1,7 +1,7 @@
 ---
 title: Renderer Test
 description: Exercises every rendering path — images, charts, flows, lists, code, prototypes
-category: experiments
+category: explorations
 status: draft
 series: 54
 featured: false

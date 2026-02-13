@@ -6,7 +6,7 @@ date:
 thumbnail: /content/media/water-stone.jpg
 status: draft
 series: 11
-category: reflexion
+category: notes
 featured: false
 tags:
     - craft

@@ -6,7 +6,7 @@ date:
 thumbnail: /content/media/lord-screen.jpg
 status: draft
 series: 14
-category: reflexion
+category: notes
 featured: false
 tags:
     - attention
