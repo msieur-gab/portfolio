@@ -15,9 +15,9 @@ featured: false
 tags:
     - privacy
     - education
-    - games
-    - sovereignty
-    - architecture
+    - play
+    - p2p
+    - e2e
 ---
 
 # CYPHER

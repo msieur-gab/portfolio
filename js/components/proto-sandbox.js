@@ -22,6 +22,14 @@ export class ProtoSandbox extends LitElement {
     _error: { state: true }
   };
 
+  // Allowlisted remote domains for prototype embedding
+  static ALLOWED_HOSTS = [
+    'netlify.app',
+    'vercel.app',
+    'pages.dev',
+    'github.io',
+  ];
+
   static styles = css`
     :host {
       display: block;
@@ -85,15 +93,29 @@ export class ProtoSandbox extends LitElement {
     this._error = null;
   }
 
+  get _isRemote() {
+    return this.src.startsWith('http://') || this.src.startsWith('https://');
+  }
+
+  get _isAllowedRemote() {
+    if (!this._isRemote) return false;
+    try {
+      const host = new URL(this.src).hostname;
+      return ProtoSandbox.ALLOWED_HOSTS.some(d => host === d || host.endsWith('.' + d));
+    } catch {
+      return false;
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
-    if (this.src) {
+    if (this.src && !this._isRemote) {
       this._loadPrototype();
     }
   }
 
   updated(changedProperties) {
-    if (changedProperties.has('src') && this.src) {
+    if (changedProperties.has('src') && this.src && !this._isRemote) {
       this._loadPrototype();
     }
     if (changedProperties.has('bg')) {
@@ -109,16 +131,20 @@ export class ProtoSandbox extends LitElement {
     this._loading = true;
     this._error = null;
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
     try {
-      const response = await fetch(this.src);
+      const response = await fetch(this.src, { signal: controller.signal });
       if (!response.ok) {
         throw new Error(`Failed to load: ${response.status}`);
       }
       this._content = await response.text();
     } catch (err) {
-      this._error = err.message;
+      this._error = err.name === 'AbortError' ? 'Load timed out' : err.message;
       console.error(`[proto-sandbox] Error loading ${this.src}:`, err);
     } finally {
+      clearTimeout(timeout);
       this._loading = false;
     }
   }
@@ -156,6 +182,27 @@ export class ProtoSandbox extends LitElement {
   }
 
   render() {
+    const heightPx = this.height.includes('px') ? this.height : `${this.height}px`;
+
+    if (this._isRemote) {
+      if (!this._isAllowedRemote) {
+        return html`<div class="error">Blocked: ${this.src} is not an allowed prototype host.</div>`;
+      }
+      return html`
+        <div class="container">
+          <span class="label">prototype</span>
+          <iframe
+            class="sandbox-frame"
+            style="height: ${heightPx}"
+            src=${this.src}
+            sandbox="allow-scripts allow-same-origin"
+            referrerpolicy="no-referrer"
+            loading="lazy"
+          ></iframe>
+        </div>
+      `;
+    }
+
     if (this._loading) {
       return html`<div class="loading">Loading prototype...</div>`;
     }
@@ -163,8 +210,6 @@ export class ProtoSandbox extends LitElement {
     if (this._error) {
       return html`<div class="error">Error: ${this._error}</div>`;
     }
-
-    const heightPx = this.height.includes('px') ? this.height : `${this.height}px`;
 
     return html`
       <div class="container">

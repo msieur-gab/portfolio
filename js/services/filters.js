@@ -60,7 +60,7 @@ export function parseSearchInput(raw) {
  * @param {string} opts.sort - 'default' | 'date' | 'alpha'
  * @returns {Array} Filtered and sorted docs (new array, never mutates input)
  */
-export function applyFilters(docs, { category = null, search = '', sort = 'default' } = {}) {
+export function applyFilters(docs, { category = null, tag = null, search = '', sort = 'default' } = {}) {
   const { query, showDrafts, showArchive, revealId } = parseSearchInput(search);
 
   let result = docs.slice();
@@ -84,6 +84,11 @@ export function applyFilters(docs, { category = null, search = '', sort = 'defau
     result = result.filter(doc => doc.category === category);
   }
 
+  // 2b. Tag filter
+  if (tag) {
+    result = result.filter(doc => (doc.frontmatter.tags || []).includes(tag));
+  }
+
   // 3. Text search
   if (query) {
     const lower = query.toLowerCase();
@@ -96,11 +101,17 @@ export function applyFilters(docs, { category = null, search = '', sort = 'defau
   }
 
   // 4. Sort
-  if (sort === 'date') {
+  if (sort === 'date-newest') {
     result.sort((a, b) => {
       const dateA = a.frontmatter.date?.published || '';
       const dateB = b.frontmatter.date?.published || '';
-      return dateB.localeCompare(dateA); // newest first
+      return dateB.localeCompare(dateA);
+    });
+  } else if (sort === 'date-oldest') {
+    result.sort((a, b) => {
+      const dateA = a.frontmatter.date?.published || '';
+      const dateB = b.frontmatter.date?.published || '';
+      return dateA.localeCompare(dateB);
     });
   } else if (sort === 'alpha') {
     result.sort((a, b) => a.label.localeCompare(b.label));

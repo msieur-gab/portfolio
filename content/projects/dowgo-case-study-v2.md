@@ -12,12 +12,10 @@ project:
         start: 2024
 featured: false
 tags:
-    - UX
-    - Fintech
+    - fintech
+    - ux
     - prototyping
-    - due-diligence
     - blockchain
-    - renewable-energy
 ---
 
 # ~~Dowgo~~

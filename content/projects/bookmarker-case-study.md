@@ -1,16 +1,16 @@
 ---
 title: "Bookmarker: A Reading Vault"
 description: "When reading became surveillance, I stopped fighting the trackers and removed the battlefield entirely."
+thumbnail: /content/media/alice-tenniel-header.webp
 category: case-study
 subcategories:
     - privacy
     - design-engineering
     - pwa
 tags:
-    - privacy-first
-    - local-first
+    - privacy
+    - user-agency
     - pwa
-    - readability
     - web-components
     - vanilla-js
 related:
@@ -25,6 +25,8 @@ related:
         - title: "Pew Research — How Americans View Data Privacy"
           url: https://www.pewresearch.org/internet/2023/10/18/how-americans-view-data-privacy/
 status: published
+date:
+    published: 2026-01-15
 project:
     status: active
     timeline:

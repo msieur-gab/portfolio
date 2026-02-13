@@ -13,11 +13,9 @@ project:
         start: 2024
 featured: false
 tags:
-    - meditation
+    - health
     - interaction-design
-    - biomechanics
-    - mobile
-    - mindfulness
+    - phygital
 ---
 
 # The Wheel That Listens

@@ -12,13 +12,9 @@ project:
         start: 2017
 featured: false
 tags:
-    - InsurTech
-    - insurance
-    - innovation
-    - API-economy
-    - strategy
+    - insurtech
     - prototyping
-    - Allianz
+    - systems-thinking
 ---
 
 # On-Demand Insurance

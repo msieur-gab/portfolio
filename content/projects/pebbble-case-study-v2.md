@@ -1,6 +1,7 @@
 ---
 title: Pebbble: A Stone That Carries Voices
 description: Designing for the families that technology forgot — NFC, IPFS, and client-side encryption in a handcrafted stone.
+thumbnail: /content/media/pebbles.jpg
 date:
     published: 2024-06-01
 status: published
@@ -14,11 +15,11 @@ featured: false
 tags:
     - privacy
     - family
-    - NFC
-    - IPFS
-    - encryption
-    - voice
-    - PWA
+    - nfc
+    - ipfs
+    - pwa
+    - phygital
+    - e2e
 ---
 
 # Pebbble

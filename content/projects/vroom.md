@@ -14,11 +14,9 @@ project:
 featured: false
 tags:
     - play
-    - childhood
-    - nfc
-    - wood
     - family
-    - imagination
+    - nfc
+    - phygital
 ---
 
 # Vroom

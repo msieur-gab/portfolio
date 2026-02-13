@@ -8,13 +8,14 @@ import { discoverContent, loadDocument, groupByCategory, FOLDERS, idToPath, path
 import { extractCategories, applyFilters } from './services/filters.js';
 import { hydrateMedia } from './utils/markdown.js';
 import { getIconSvg } from './utils/icons.js';
+import { relativeDate } from './utils/dates.js';
 
 // DOM elements
 const cardsContainer = document.getElementById('cards');
 const panel = document.getElementById('panel');
 const panelClose = document.getElementById('panel-close');
 const panelTitle = document.getElementById('panel-title');
-const panelCategory = document.getElementById('panel-category');
+
 const scrollSync = document.getElementById('scroll-sync');
 const content = document.getElementById('content');
 const themeToggle = document.getElementById('theme-toggle');
@@ -30,7 +31,7 @@ const searchInput = document.getElementById('search-input');
 // State
 let allDocs = [];
 let currentDoc = null;
-let filterState = { category: null, search: '', sort: 'default' };
+let filterState = { category: null, tag: null, search: '', sort: 'default' };
 let searchDebounceTimer = null;
 let isInitialLoad = true;
 
@@ -117,6 +118,12 @@ function createCard(doc) {
   card.className = 'card';
   card.dataset.id = doc.id;
 
+  // Category label (above title)
+  const cat = document.createElement('span');
+  cat.className = 'card-category';
+  cat.textContent = doc.category || 'other';
+  card.appendChild(cat);
+
   // Series number (from frontmatter)
   const series = doc.frontmatter.series;
   if (series) {
@@ -131,21 +138,6 @@ function createCard(doc) {
   title.className = 'card-title';
   title.textContent = doc.label;
   card.appendChild(title);
-
-  // Tags
-  const tags = doc.frontmatter.tags;
-  if (tags && tags.length) {
-    const tagList = document.createElement('ul');
-    tagList.className = 'card-tags';
-    tagList.setAttribute('aria-label', 'Project tags');
-    for (const tag of tags.slice(0, 5)) {
-      const li = document.createElement('li');
-      li.className = 'card-tag';
-      li.textContent = tag;
-      tagList.appendChild(li);
-    }
-    card.appendChild(tagList);
-  }
 
   // Cover image
   const thumbnail = doc.frontmatter.thumbnail;
@@ -167,22 +159,35 @@ function createCard(doc) {
     card.appendChild(description);
   }
 
-  // Footer
+  // Footer — date + tags
   const footer = document.createElement('footer');
   footer.className = 'card-footer';
-
-  const cat = document.createElement('span');
-  cat.className = 'card-category';
-  cat.textContent = doc.category || 'other';
-  footer.appendChild(cat);
 
   const pubDate = doc.frontmatter.date?.published;
   if (pubDate) {
     const time = document.createElement('time');
     time.className = 'card-date';
     time.setAttribute('datetime', pubDate);
-    time.textContent = new Date(pubDate).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    time.textContent = relativeDate(pubDate);
     footer.appendChild(time);
+  }
+
+  const tags = doc.frontmatter.tags;
+  if (tags && tags.length) {
+    const tagList = document.createElement('ul');
+    tagList.className = 'card-tags';
+    tagList.setAttribute('aria-label', 'Tags');
+    for (const tag of tags.slice(0, 3)) {
+      const li = document.createElement('li');
+      li.className = 'card-tag';
+      li.textContent = tag;
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        filterByTag(tag);
+      });
+      tagList.appendChild(li);
+    }
+    footer.appendChild(tagList);
   }
 
   card.appendChild(footer);
@@ -301,7 +306,37 @@ function updateCategoryActive(active) {
   });
 }
 
-const SORT_CYCLE = ['default', 'date', 'alpha'];
+function filterByTag(tag) {
+  if (filterState.tag === tag) {
+    filterState.tag = null;
+  } else {
+    filterState.tag = tag;
+  }
+  updateActiveTagIndicator();
+  renderFilteredCards();
+}
+
+function updateActiveTagIndicator() {
+  // Remove existing indicator
+  const existing = document.querySelector('.active-tag-filter');
+  if (existing) existing.remove();
+
+  if (!filterState.tag) return;
+
+  // Insert tag pill right after "All" button
+  const pill = document.createElement('button');
+  pill.className = 'filter-btn active active-tag-filter';
+  pill.textContent = `#${filterState.tag} ✕`;
+  pill.addEventListener('click', () => {
+    filterState.tag = null;
+    pill.remove();
+    renderFilteredCards();
+  });
+  const allBtn = filterCategoriesEl.querySelector('.filter-btn:first-child');
+  allBtn.after(pill);
+}
+
+const SORT_CYCLE = ['default', 'date-newest', 'date-oldest', 'alpha'];
 
 function cycleSortOrder() {
   const idx = SORT_CYCLE.indexOf(filterState.sort);
@@ -342,7 +377,7 @@ async function openPanel(doc) {
 
   // Update panel header
   panelTitle.textContent = doc.label;
-  panelCategory.textContent = doc.category || '';
+
 
   // Update URL to clean path
   history.pushState({ docId: doc.id }, '', idToPath(doc.id));
@@ -350,9 +385,11 @@ async function openPanel(doc) {
   // Open panel
   document.body.classList.add('panel-open');
 
-  // Load and render content
+  // Load and render content (strip leading h1 — already shown in panel header)
   const { html } = await loadDocument(doc);
   content.innerHTML = html;
+  const leadingH1 = content.querySelector('h1:first-child');
+  if (leadingH1) leadingH1.remove();
 
   // Hydrate charts and flow diagrams
   await hydrateMedia(content);
@@ -375,11 +412,13 @@ async function openPanelSilent(doc) {
 
   currentDoc = doc;
   panelTitle.textContent = doc.label;
-  panelCategory.textContent = doc.category || '';
+
   document.body.classList.add('panel-open');
 
   const { html } = await loadDocument(doc);
   content.innerHTML = html;
+  const leadingH1 = content.querySelector('h1:first-child');
+  if (leadingH1) leadingH1.remove();
   await hydrateMedia(content);
 
   requestAnimationFrame(() => {

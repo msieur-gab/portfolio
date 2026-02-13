@@ -9,10 +9,8 @@ series: 13
 category: reflexion
 featured: false
 tags:
-    - design-philosophy
-    - wu-wei
     - craft
-    - methodology
+    - systems-thinking
 ---
 
 # What Wants to Happen

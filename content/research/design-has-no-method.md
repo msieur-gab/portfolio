@@ -9,10 +9,8 @@ series: 11
 category: reflexion
 featured: false
 tags:
-    - design-philosophy
-    - methodology
-    - wu-wei
-    - ethics
+    - craft
+    - systems-thinking
 ---
 
 # Design Has No Method

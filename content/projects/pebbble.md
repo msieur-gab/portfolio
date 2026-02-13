@@ -17,8 +17,7 @@ tags:
     - family
     - nfc
     - ipfs
-    - voice
-    - connection
+    - phygital
 ---
 
 # Pebbble

@@ -19,11 +19,9 @@ project:
         end: 2025-01
     client: Personal Project
 tags:
-    - scroll-sync
-    - storytelling
-    - accessibility
     - web-components
     - interaction-design
+    - vanilla-js
 ---
 
 # Scroll Sync: When Less Becomes More

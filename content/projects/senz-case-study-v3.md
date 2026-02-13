@@ -13,12 +13,9 @@ project:
         start: 2018
         end: 2021
 tags:
-    - AI
-    - computer-vision
-    - sketch-to-code
-    - innovation
+    - ai
     - prototyping
-    - Allianz
+    - insurtech
 ---
 
 # Senz

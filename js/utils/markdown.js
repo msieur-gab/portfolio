@@ -99,28 +99,33 @@ export function markdownToHtml(md, options = {}) {
     // Prototype directive: ::prototype{src="..." height="..." caption="..."}
     .replace(/::prototype\{([^}]+)\}/g, (_, attrs) => {
       const props = parseDirectiveAttrs(attrs);
-      const src = props.src ? resolveUrl(props.src) : '';
-      const height = props.height || '300';
-      const caption = props.caption || '';
-      const bgAttr = props.bg ? ` bg="${props.bg}"` : '';
+      const src = props.src ? sanitizeUrl(resolveUrl(props.src)) : '';
+      const height = escapeAttr(props.height || '300');
+      const caption = props.caption ? escapeHtml(props.caption) : '';
+      const bgAttr = props.bg ? ` bg="${escapeAttr(props.bg)}"` : '';
       return `<figure data-media data-type="prototype">
-        <proto-sandbox src="${src}" height="${height}"${bgAttr}></proto-sandbox>
+        <proto-sandbox src="${escapeAttr(src)}" height="${height}"${bgAttr}></proto-sandbox>
         ${caption ? `<figcaption>${caption}</figcaption>` : ''}
       </figure>`;
     })
     // Images with title (for data-fit attribute)
     // ![alt](src "title") -> <figure data-media data-fit="title">
     .replace(/!\[([^\]]*)\]\(([^)\s]+)\s+"([^"]+)"\)/g, (_, alt, src, title) => {
-      return `<figure data-media data-fit="${title}">
-        <img src="${resolveUrl(src)}" alt="${alt}">
-        ${alt ? `<figcaption>${alt}</figcaption>` : ''}
+      const safeSrc = escapeAttr(sanitizeUrl(resolveUrl(src)));
+      const safeAlt = escapeAttr(alt);
+      const safeTitle = escapeAttr(title);
+      return `<figure data-media data-fit="${safeTitle}">
+        <img src="${safeSrc}" alt="${safeAlt}">
+        ${alt ? `<figcaption>${escapeHtml(alt)}</figcaption>` : ''}
       </figure>`;
     })
     // Regular images
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
+      const safeSrc = escapeAttr(sanitizeUrl(resolveUrl(src)));
+      const safeAlt = escapeAttr(alt);
       return `<figure data-media>
-        <img src="${resolveUrl(src)}" alt="${alt}">
-        ${alt ? `<figcaption>${alt}</figcaption>` : ''}
+        <img src="${safeSrc}" alt="${safeAlt}">
+        ${alt ? `<figcaption>${escapeHtml(alt)}</figcaption>` : ''}
       </figure>`;
     })
     // Code blocks: charts, flows, and regular code
@@ -158,10 +163,12 @@ export function markdownToHtml(md, options = {}) {
         <blockquote>${content}</blockquote>
       </figure>`;
     })
+    // Sub-headers (h6 used as overline labels)
+    .replace(/^###### (.+)$/gm, (_, t) => `<h6>${escapeHtml(t)}</h6>`)
     // Headers (must come after blockquotes)
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+    .replace(/^### (.+)$/gm, (_, t) => `<h3>${escapeHtml(t)}</h3>`)
+    .replace(/^## (.+)$/gm, (_, t) => `<h2>${escapeHtml(t)}</h2>`)
+    .replace(/^# (.+)$/gm, (_, t) => `<h1>${escapeHtml(t)}</h1>`)
     // Lists (must come before inline formatting — * conflicts with emphasis)
     .replace(/(^\* .+$\n?)+/gm, (match) => {
       const items = match.trim().split('\n').map(l => `<li>${l.replace(/^\* /, '')}</li>`).join('\n');
@@ -181,7 +188,10 @@ export function markdownToHtml(md, options = {}) {
     .replace(/==([^=]+)==/g, '<mark>$1</mark>')
     .replace(/`([^`]+)`/g, (_, code) => `<code>${escapeHtml(code)}</code>`)
     // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, text, url) => {
+      const safeUrl = escapeAttr(sanitizeUrl(url));
+      return safeUrl ? `<a href="${safeUrl}">${escapeHtml(text)}</a>` : escapeHtml(text);
+    });
 
   // Wrap remaining plain text in paragraphs
   html = html
@@ -214,6 +224,18 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+}
+
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/"/g, '&quot;');
+}
+
+function sanitizeUrl(url) {
+  const trimmed = (url || '').trim();
+  if (/^javascript:/i.test(trimmed) || /^data:/i.test(trimmed) || /^vbscript:/i.test(trimmed)) {
+    return '';
+  }
+  return trimmed;
 }
 
 /**

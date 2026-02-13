@@ -15,11 +15,9 @@ project:
 tags:
     - privacy
     - education
-    - ARG
-    - sovereignty
-    - cryptography
-    - WebRTC
-    - EUDI
+    - p2p
+    - e2e
+    - user-agency
 ---
 
 # Nexus

@@ -9,11 +9,9 @@ series: 14
 category: reflexion
 featured: false
 tags:
-    - algorithms
     - attention
-    - critical-thinking
-    - ethics
-    - technology
+    - education
+    - user-agency
 ---
 
 # The Lord of the Screen

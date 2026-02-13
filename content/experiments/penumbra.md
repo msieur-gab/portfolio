@@ -5,6 +5,12 @@ status: published
 series: 52
 featured: true
 category: experiments
+tags:
+    - interaction-design
+    - vanilla-js
+    - phygital
+date:
+    published: 2025-01-15
 ---
 
 # Penumbra

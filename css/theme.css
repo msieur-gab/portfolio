@@ -64,7 +64,7 @@
 
   /* ─── Layout ─────────────────────────────────────────────────────────────── */
   --panel-width:   min(80vw, calc(100vw - 320px));
-  --header-height: 64px;
+  --header-height: 84px;
 
 }
 

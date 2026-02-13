@@ -9,10 +9,8 @@ series: 12
 category: reflexion
 featured: false
 tags:
-    - design-philosophy
-    - wu-wei
+    - craft
     - systems-thinking
-    - flow
 ---
 
 # There Are No Problems
