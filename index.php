@@ -47,6 +47,22 @@ if ($path === '/feed.xml' || $path === '/rss') {
     handle_feed($cfg);
 }
 
+if ($path === '/sitemap.xml') {
+    require __DIR__ . '/php/sitemap.php';
+    handle_sitemap($cfg);
+}
+
+if ($path === '/robots.txt') {
+    $siteUrl = rtrim($cfg['site_url'], '/');
+    header('Content-Type: text/plain');
+    echo "User-agent: *\n";
+    echo "Allow: /\n";
+    echo "Disallow: /admin\n";
+    echo "Disallow: /content/prototypes/\n\n";
+    echo "Sitemap: {$siteUrl}/sitemap.xml\n";
+    exit;
+}
+
 if ($path === '/admin' || str_starts_with($path, '/admin/')) {
     require __DIR__ . '/php/admin.php';
     handle_admin($path, $method, $cfg);
