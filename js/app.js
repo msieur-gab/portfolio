@@ -515,6 +515,14 @@ async function init() {
   searchToggle.addEventListener('click', toggleSearch);
   searchInput.addEventListener('input', onSearchInput);
 
+  // Obfuscated email — assemble mailto on click
+  document.querySelectorAll('a[data-u][data-d]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.href = 'mailto:' + link.dataset.u + '@' + link.dataset.d;
+    });
+  });
+
   // Handle popstate (browser back/forward)
   window.addEventListener('popstate', () => {
     const docId = pathToDocId(location.pathname);

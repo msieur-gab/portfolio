@@ -5,9 +5,9 @@
  */
 
 return [
-    'site_title'       => '../',
+    'site_title'       => './tldr',
     'site_url'         => 'http://localhost:8000',
-    'site_description' => 'the lost.directory — the work of Gabriel Baude.',
+    'site_description' => 'the lost.directory — the work of Gabriel Baude. Systems designer and builder — projects, explorations, and notes on presence, intent, and agency in technology.',
     'admin_password'   => '', // bcrypt hash — use password_hash() or install.php
     'content_dir'      => __DIR__ . '/../content',
     'content_folders'  => ['projects', 'explorations', 'notes'],
