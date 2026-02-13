@@ -22,11 +22,13 @@ function handle_feed(array $cfg): never {
     $updated = $latestDate ? date('c', strtotime($latestDate)) : date('c');
     echo '  <updated>' . $updated . '</updated>' . "\n";
     echo '  <id>' . e($siteUrl) . '/</id>' . "\n";
+    echo '  <icon>' . e($siteUrl) . '/favicon.svg</icon>' . "\n";
 
     foreach ($items as $item) {
         $urlPath = file_to_url_path($item['file']);
         $url = $siteUrl . '/' . $urlPath;
         $pubDate = $item['date'] ? date('c', strtotime($item['date'])) : date('c');
+        $thumbUrl = $item['thumbnail'] ? $siteUrl . '/' . ltrim($item['thumbnail'], '/') : '';
 
         echo "  <entry>\n";
         echo '    <title>' . e($item['title']) . '</title>' . "\n";
@@ -36,6 +38,27 @@ function handle_feed(array $cfg): never {
         if ($item['description']) {
             echo '    <summary>' . e($item['description']) . '</summary>' . "\n";
         }
+
+        // Categories (folder + tags)
+        if ($item['category']) {
+            echo '    <category term="' . e($item['category']) . '" />' . "\n";
+        }
+        foreach ($item['tags'] as $tag) {
+            echo '    <category term="' . e($tag) . '" />' . "\n";
+        }
+
+        // Rich HTML content with thumbnail
+        $contentParts = '';
+        if ($thumbUrl) {
+            $contentParts .= '<img src="' . e($thumbUrl) . '" alt="' . e($item['title']) . '" />';
+        }
+        if ($item['description']) {
+            $contentParts .= '<p>' . e($item['description']) . '</p>';
+        }
+        if ($contentParts) {
+            echo '    <content type="html"><![CDATA[' . $contentParts . ']]></content>' . "\n";
+        }
+
         echo "  </entry>\n";
     }
 
